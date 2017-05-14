@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    	<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=yes">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+       	<script src="../js/jquery.min.js"></script>
+   		<script src="../js/kendo.all.min.js"></script>
+		<script src="../js/mergeGrid.js"></script>
+    	<script src="../js/common.js"></script>
+    	<script src="../js/reportlayout.js"></script>
+		<script src="../js/layer.js"></script>
+		<script src="../js/jqPaginator.js" type="text/javascript" ></script>
+		<script src="../js/ba.filter.js"></script>
+		<script src="../js/messages/kendo.messages.zh-CN.min.js"></script>
+    	<script src="../js/cultures/kendo.culture.zh-CN.min.js"></script>
+		<link href="../styles/bootstrap.min.css" type="text/css" rel="stylesheet" />
+		<link href="../styles/kendo.common.min.css" rel="stylesheet">
+    	<link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+		<link href="../styles/pager.css" rel="stylesheet">
+    	<link href="../styles/BA.Common.css" rel="stylesheet">	
+		<link href="../styles/ba.kendo.ui.css" rel="stylesheet">
+		<style>
+			#sessionGrid{
+				height: calc(100% - 147px);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="reportTop" style="height:47px;width:100%;border-bottom:0px solid lightgray;">
+	        <div id="logo">
+	            	系统监控台
+	        </div>
+	        <div id="toolbar">
+		        <div id="reportMainMenu">
+		        	<button id="Refresh" class="k-button" style="width: 60px;">刷新</button>
+		        	<button id="Close" class="k-button" style="width: 60px;">关闭</button>
+		        </div>
+	        </div>
+   		</div>
+		<div>
+			<div id="sessionGrid"></div>
+		</div>
+		<script>
+		function createReportJson() {
+		
+			$.ajax({ 
+           			type: "Get",
+                	dataType: "json",
+                	contentType: "application/json; charset=utf-8",
+			    	cache: false,
+			    	async: true,
+					
+			    	url: getWebApiURI()+"/GetReportSessionList",               
+                	success: function (data) { 	
+                		
+                			var h = $(window).height();
+                			$("#sessionGrid").empty();
+							createGrid(data,h-50);
+							
+							
+                	}, 
+                	error: function (XMLHttpRequest, textStatus, errorThrown) { 
+                        alert(errorThrown); 
+                	} 
+           	});					
+        }
+		
+		 function createGrid(rows,h) {
+            $("#sessionGrid").kendoGrid({
+                dataSource:{
+                    data: rows
+                },
+         		height:h,
+                groupable:  false,
+                sortable:  	true,
+                scrollable:	true,
+                filterable: true,
+                columnMenu: true,
+                columns: [{
+                	field: "UserCode",
+                    title: "用户名",
+                    width: 180,
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                }, {
+                    field: "ReportId",
+                    title: "报表Id ",
+                    width: 250,
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                }, {
+                    field: "ReportName",
+                    title: "报表名称 ",
+                    width: 180,
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                }, {
+                    field: "CreateDate",
+                    title: "创建时间",
+                    type: 'date',
+                    template: '#= kendo.toString(CreateDate, "MM-dd h:mm:ss") #',
+                    width: 100,
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                }, {
+                    field: "Filter",
+                    title: "过滤条件",
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                   
+                },
+                 { command: { text: "查看明细", click: showDetails }, title: "查看", width: "100px",headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    } ,
+                 attributes:{style:"text-align: center"}},
+                 { command: { text: "关闭报表", click: closeReportSession }, title: "关闭", width: "100px",headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    } ,
+                 attributes:{style:"text-align: center"}}
+                 ],
+                theme:      "bootstrap"
+            });
+        }
+		 
+		 function showDetails(e){
+		 	  e.preventDefault();
+              var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+              var uid = dataItem.UserId;
+              var rid = dataItem.ReportId;
+              layer.open({
+							  type: 2,
+							  shift:5,
+							  title:"报表计算明细",
+							  shade: [0.6, '#393D49'],
+							  shadeClose: true, //开启遮罩关闭
+							  area: ['600px', '490px'], //宽高
+							  content: "monitorDetail.htm?userId="+uid+"&reportId="+rid,
+							  
+						});
+		 }
+		 
+		  function closeReportSession(e){
+		 	  e.preventDefault();
+              var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+              var uid = dataItem.UserId;
+              var rid = dataItem.ReportId;
+              
+              $.ajax({ 
+           			type: "Get",
+                	dataType: "json",
+                	contentType: "application/json; charset=utf-8",
+			    	cache: false,
+			    	async: true,
+					
+			    	url: getWebApiURI()+"/CloseReportSession/?userId="+uid+"&reportId="+rid,               
+                	success: function (data) { 	
+                		
+                		createReportJson();
+                	}, 
+                	error: function (XMLHttpRequest, textStatus, errorThrown) { 
+                        alert(errorThrown); 
+                	} 
+           	});				
+		 }
+		  
+		  function registerEvent(){
+		  	$("#Refresh").on('click', refreshPage);
+			$("#Close").on('click', closePage);
+		 }
+		 
+		 function refreshPage(){
+		 	
+		 	createReportJson();
+		 	
+		 }
+		 
+		  function closePage(){
+		 		var m = new Array();
+				m[0] = "CloseDocument";
+				m[1] = "fn_098";
+	
+				window.parent.postMessage(m,'*');
+		 }
+		 
+		 $(document).ready(function() {
+                    setTimeout(function() {
+						kendo.culture("zh-CN");
+                        createReportJson();
+                        registerEvent();
+                    }, 400);
+			});
+		 </script>
+	</body>
+</html>

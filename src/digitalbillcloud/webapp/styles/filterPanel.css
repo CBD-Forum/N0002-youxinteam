@@ -1,0 +1,66 @@
+  /*过滤panel样式*/
+        .filterpanel {
+            position: fixed;
+            right: 0px;
+            top: 0px;
+            display: none;
+            z-index: 3;
+            width: 100%;
+            background-color: #FFFFFF;
+        }
+
+        .filtertool {
+            position: relative;
+            height: 50px; 
+            width: 100%;   
+        }
+            .filtertool .btool {
+                float: left;
+                text-align: center;
+                line-height: 50px;
+            } 
+       .filtervaluetool {
+                height: 50px;
+            }
+         .filtervaluetool .tool {
+            float:left;
+            line-height: 50px;
+            text-align: center;
+        }
+
+        .filtercontent {
+            position: relative; 
+            width: 100%;
+            /*margin-top:5%;*/
+           
+        }
+
+        .filteritem {
+            
+            color: black; 
+        }
+
+            .filteritem > .filtername {
+                float: left;
+                color: #000000;
+                margin-left: 10px;
+                text-align: center;
+            }
+
+            .filteritem > .filtervalue {
+                float: right;
+                color: red;
+                margin-right: 10px;
+                font-weight: bolder;
+                text-align: center;
+            }
+
+        .valuecontent {
+            height: 80%;
+            overflow-y: auto;
+            margin-top:0px;
+        }
+
+
+
+      

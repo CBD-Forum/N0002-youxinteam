@@ -1,0 +1,61 @@
+﻿.describe { 
+    text-align:center;
+    border-top-left-radius:1px;
+    border-top-right-radius:1px;
+    background-color:#5ec9f6;
+    font-size: 1.2em;
+    color:#F4EDEC;
+}
+
+.backreportlist {
+    position: fixed;  
+    height:250px;
+    width:50%;
+    z-index: 2;
+    left:0px;
+    bottom: 2em;
+    display: none;  
+    box-shadow: 0px 0px 1px 1px #5ec9f6;
+    background-color: #FFFFFF;
+} 
+/*工具条样式*/
+.bottomtoolmenu {
+    position: fixed;
+    width:100%;
+    left:0px;
+    bottom:0px;
+    height: 2em;
+    background-color: #F5F5F5;
+    border-top:1px solid #EDEDED;
+    z-index:3;
+}
+.bottombackitem {
+    float: left;
+    width: 50px;
+    margin-top: 5px;
+    margin-left: 10px;
+    text-align:center;
+}
+    .bottombackitem:hover {
+       cursor:pointer;
+    }
+    .bottombackitem:active {
+        background-color:#F5F5F5;
+    }  
+.last {
+    float: right;  
+    margin-right: 15px;
+} 
+/*当前为第一页时提示框*/
+.tipcontent {
+    position:fixed;
+    width:200px; 
+    bottom:70px; 
+    font-size:.9em;
+    color:#F2F2F2; 
+    background-color: #FF6E71;
+    text-align: center;
+    border-radius: 5px;
+    display:none;
+    z-index:8; 
+}

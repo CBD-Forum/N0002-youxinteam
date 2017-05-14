@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/kendo.all.min.js"></script>
+		
+		<script type="text/javascript" src="../js/common.js" ></script>
+		<script src="../js/layer.js"></script>
+		<link href="../styles/kendo.common.min.css" rel="stylesheet">
+	    <link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+	   	<link href="../styles/kendo.dataviz.min.css" rel="stylesheet">
+		
+		<link href="../styles/ba.kendo.ui.css" rel="stylesheet">
+		<link rel="stylesheet"  href="../styles/BA.Common.css">
+		
+	
+    	<link rel="stylesheet" href="../js/skin/layer.css" />
+    	<style>
+    		  .k-checkbox-label:before {
+			width: 16px;
+			height: 16px;
+		}
+    	</style>
+    	<script type="text/x-kendo-template" id="template1">
+
+	    	# if (data.used==true) { #
+	      		<input type="checkbox" id="p1_#= data.id #" data-rid='#= data.id #'  class="k-checkbox" checked>
+	      	#} else {#
+	      		<input type="checkbox" id="p1_#= data.id #"  data-rid='#= data.id #'  class="k-checkbox" >
+	      	# } #	
+	        <label class="k-checkbox-label" for="p1_#= data.id #"></label>
+
+		</script>
+	</head>
+	<body>
+		<div>
+			<div id="treelist"></div>
+		</div>
+		
+		<script>
+		var userId = getUrlParam("id"); ;
+		
+		$(document).ready(function() {
+                    setTimeout(function() {
+                    	initTreeList();
+                        loadUserRoles();
+                      
+                    }, 400);
+		});
+		
+		function initTreeList(){
+			 $("#treelist").kendoTreeList({
+                       
+                        columns: [
+                            { field: "code",title:"角色编码" },
+                            { field: "name",title:"角色名称" },
+                            { field: "used" ,title:"隶属于" , width:"100px",template: $("#template1").html() ,attributes: {style: "text-align: center"} },
+                           
+                        ]
+                   });
+		}
+		function loadUserRoles(){
+				$.ajax({
+						type: "get",
+						dataType: "json",
+						cache: false,
+						async: true,
+						url: getWebApiAuthURI() + "/GetUserRoles/?token="+getUserToken()+"&userId="+userId,
+						success: function(data) {
+							 var dataSource = new kendo.data.TreeListDataSource({
+					                        data: data,
+					                        schema: {
+					                            model: {
+					                                id: "id",
+					                                expanded: true
+					                            }
+					                        }
+					                    });
+								var treeList = $("#treelist").data("kendoTreeList");
+					    		treeList.setDataSource(dataSource);
+					    		
+					    		registerEvent();
+						},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						alert(errorThrown);
+					}
+				});
+		}
+		
+		
+		function registerEvent(){
+			
+    		$(".k-checkbox").click(function(){
+    			
+    			var roleId = $(this).data("rid");
+    			var result =  $(this).is(':checked');
+    			
+    			  $.ajax({
+							type: "get",
+							dataType: "json",
+							cache: false,
+							async: true,
+							url: getWebApiAuthURI() + "/AssignUserRole/?token="+getUserToken()+"&userId="+userId+"&roleId="+roleId+"&used="+result,
+							success: function(data) {
+								 
+							},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+    		});
+    		
+		}
+		
+
+	</script>
+	</body>
+</html>

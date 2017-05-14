@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"> 
+	<title>角色管理</title>
+	
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/kendo.all.min.js"></script>
+	
+	<script src="../js/common.js" type="text/javascript"></script>
+	<script src="../js/layer.js"></script>
+	<link href="../styles/kendo.common.min.css" rel="stylesheet">
+    <link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+   	<link href="../styles/kendo.dataviz.min.css" rel="stylesheet">
+	
+	<link href="../styles/ba.kendo.ui.css" rel="stylesheet">
+	<link rel="stylesheet"  href="../styles/BA.Common.css">
+	
+	<style>
+		html{height: 100%;}
+		body{height: 100%;}
+		.left{
+			background: #F2F2F2;
+			float: left;
+			width: 300px;
+			height: 100%;
+		}
+		.form-control{
+			width: 200px;
+			height: 30px;
+		}
+		.form-group{
+			padding-top: 20px;
+		}
+		.btn-default{
+			width: 80px;
+		}
+		
+		
+		.fieldlist {
+                margin: 1em 0em -2em;
+                padding: 0px;
+            }
+
+            .fieldlist li {
+                list-style: none;
+                padding-bottom: 2em;
+            }
+             .fieldlist label {
+                /*display: block;*/
+                display:inline-block;
+                width: 100px;
+                text-align: right;
+                padding-right: 10px;
+                font-size: 13px;
+                color: #444;
+                
+            }
+            
+            input.k-textbox {
+            	
+    		width: 200px;
+    		height: 30px;
+    	}
+    	
+		#foot{
+			position:fixed;
+			_position:absolute;
+			bottom:0px;
+			height: 50px;
+			padding: 10px;
+			margin-left: 300px;
+			background: yellowgreen;
+			width: calc(100% - 300px);
+			bottom:0px;
+		}
+		
+		.k-checkbox-label:before {
+			width: 16px;
+			height: 16px;
+		}
+		.k-button{
+			min-width: 60px;
+		}
+	</style>
+</head>
+<body>
+	 <div style="height:47px;width:100%;border-bottom:0px solid lightgray;background:#EEEEEE;">
+        <div id="logo">
+            	角色管理
+        </div>
+        <div id="toolbar">
+	        <div id="reportMainMenu">
+	        	<button id="CreateRole" class="k-button">新建</button>
+	        	<button id="ModifyRole" class="k-button">修改</button>
+	        	<button id="DeleteRole" class="k-button">删除</button>
+	        	<button id="Close" class="k-button">关闭</button>
+	        </div>
+        </div>
+   </div>
+	<div class="left">
+		<div id='leftTreeDiv' style='width:90%;height:390px;overflow: hidden;'></div>
+	</div>
+	
+	<div style="width: 800px; height: 80%;margin-left: 300px;margin-top:40px; text-align: center;">
+		 <ul class="fieldlist">
+            <li>
+                <label for="txtRoleCode">角色编码</label>
+                <input id="txtRoleCode" type="text" class="k-textbox"  />
+            </li>
+            <li>
+                <label for="txtRoleName">角色名称</label>
+                <input id="txtRoleName" type="text" class="k-textbox"  />
+            </li>
+  
+        </ul>
+	</div>
+	
+
+<!--
+	作者：offline
+	时间：2016-10-31
+	描述：
+
+<div id="foot">
+	<button type="button" class="btn btn-default">确定</button>
+	<button type="button" class="btn btn-default" style="margin-left: 20px;">取消</button>
+</div>
+	-->
+	<script>
+		var roleId;
+		$(document).ready(function() {
+                    setTimeout(function() {
+                    	load();
+                        loadLeftTree();
+                    }, 400);
+		});
+		
+		function load(){
+			$("#leftTreeDiv").kendoTreeView({
+			                    change: onChange
+			                });
+		}
+		function loadLeftTree(){
+				$.ajax({
+						type: "get",
+						dataType: "json",
+						cache: false,
+						async: true,
+						url: getWebApiAuthURI() + "/GetRoleTree/?token="+getUserToken(),
+						success: function(data) {
+							 var ds = new kendo.data.HierarchicalDataSource({
+			                    data: data
+			                });
+			
+			                $("#leftTreeDiv").data("kendoTreeView").setDataSource(ds);
+
+						},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						alert(errorThrown);
+					}
+				});
+		}
+		function onChange(e) {
+			 		
+					   var data = $('#leftTreeDiv').data('kendoTreeView').dataItem(this.select());
+					   roleId = data.id;
+	                   $.ajax({
+							type: "get",
+							dataType: "json",
+							cache: false,
+							async: true,
+							url: getWebApiAuthURI() + "/GetRole/?token="+getUserToken()+"&roleId="+data.id,
+							success: function(data) {
+								 loadRole(data);
+							},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+                    	
+                   
+        }
+		
+		function loadRole(role){
+			$("#txtRoleCode").val(role.Code);
+			$("#txtRoleName").val(role.Name);
+		}
+		
+		function createRole(){
+			  layer.open({
+							  type: 2,
+							  shift:5,
+							  title:"新建角色",
+							  shade: [0.6, '#393D49'],
+							  shadeClose: true, //开启遮罩关闭
+							  area: ['480px', '400px'], //宽高
+							  content: "editRole.htm?id=",
+							  end: function(){ 
+							  	loadLeftTree();
+							  },
+						});
+		}
+		function modifyRole(){
+			
+		
+			if( roleId=="" || roleId==undefined)
+				return;
+				
+			 layer.open({
+							  type: 2,
+							  shift:5,
+							  title:"修改角色",
+							  shade: [0.6, '#393D49'],
+							  shadeClose: true, //开启遮罩关闭
+							  area: ['480px', '400px'], //宽高
+							  content: "editRole.htm?id="+roleId,
+							  end: function(){ 
+							  	loadLeftTree();
+							  },
+						});
+		}
+		function deleteRole(){
+			
+			if( roleId=="" || roleId==undefined)
+				return;
+			$.ajax({
+							type: "get",
+							dataType: "json",
+							cache: false,
+							async: true,
+							url: getWebApiAuthURI() + "/DeleteRole/?token="+getUserToken()+"&roleId="+roleId,
+							success: function(data) {
+								 loadLeftTree();
+							},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+		}
+		
+		 function closePage(){
+		 		var m = new Array();
+				m[0] = "CloseDocument";
+				m[1] = "fn_001";
+	
+				window.parent.postMessage(m,'*');
+		 }
+		
+		
+		
+		$("#CreateRole").on('click', createRole);
+		$("#ModifyRole").on('click', modifyRole);
+		$("#DeleteRole").on('click', deleteRole);
+		$("#Close").on('click', closePage);
+		
+	</script>
+</body>
+</html>

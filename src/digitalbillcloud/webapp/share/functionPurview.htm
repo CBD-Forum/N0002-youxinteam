@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/kendo.all.min.js"></script>
+		
+		<script type="text/javascript" src="../js/common.js" ></script>
+		<script src="../js/layer.js"></script>
+		<script src="../temp/layui.js"></script>
+		<link href="../styles/kendo.common.min.css" rel="stylesheet">
+	    <link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+	   	<link href="../styles/kendo.dataviz.min.css" rel="stylesheet">
+		
+		<link href="../styles/ba.kendo.ui.css" rel="stylesheet">
+		<link rel="stylesheet"  href="../styles/BA.Common.css">
+    	<link rel="stylesheet" href="../js/skin/layer.css" />
+    	<link rel="stylesheet" href="../temp/layui.css" />
+        <link href="../styles/BA.Common.css" rel="stylesheet">	
+		<link href="../styles/ba.kendo.ui.css" rel="stylesheet">
+		
+		<style>
+		html{height: 100%;}
+		body{height: 100%;}
+		.left{
+			background: #F2F2F2;
+			float: left;
+			width: 23%;
+			height: 100%;
+		}
+		.form-control{
+			width: 200px;
+			height: 30px;
+		}
+		.form-group{
+			padding-top: 20px;
+		}
+		.btn-default{
+			width: 80px;
+		}
+		
+		
+		.fieldlist {
+                margin: 1em 0em -2em;
+                padding: 0px;
+            }
+
+            .fieldlist li {
+                list-style: none;
+                padding-bottom: 2em;
+            }
+             .fieldlist label {
+                /*display: block;*/
+                display:inline-block;
+                width: 100px;
+                text-align: right;
+                padding-right: 10px;
+                font-size: 13px;
+                color: #444;
+                
+            }
+            
+            input.k-textbox {
+            	
+    		width: 200px;
+    		height: 30px;
+    	}
+    	
+		#foot{
+			position:fixed;
+			_position:absolute;
+			bottom:0px;
+			height: 50px;
+			padding: 10px;
+			margin-left: 300px;
+			background: yellowgreen;
+			width: calc(100% - 300px);
+			bottom:0px;
+		}
+		
+		.k-checkbox-label:before {
+			width: 16px;
+			height: 16px;
+		}
+		.k-button{
+			min-width: 60px;
+		}
+	</style>
+	
+	 <script type="text/x-kendo-template" id="template1">
+	    # if (data.type!="Folder") { #
+	    	# if (data.canView==true) { #
+	      		<input type="checkbox" id="p1_#= data.id #" data-xid='#= data.id #' data-op='1' class="k-checkbox" checked>
+	      	#} else {#
+	      		<input type="checkbox" id="p1_#= data.id #"  data-xid='#= data.id #'  data-op='1' class="k-checkbox" >
+	      	# } #	
+	        <label class="k-checkbox-label" for="p1_#= data.id #"></label>
+	    # } #
+	</script>
+	
+	<script type="text/x-kendo-template" id="template2">
+	    # if (data.type!="Folder") { #
+	    	# if (data.canModify==true) { #
+	      		<input type="checkbox" id="p2_#= data.id #" data-xid='#= data.id #' data-op='2' class="k-checkbox" checked>
+	      	#} else {#
+	      		<input type="checkbox" id="p2_#= data.id #"  data-xid='#= data.id #' data-op='2' class="k-checkbox" >
+	      	# } #	
+	        <label class="k-checkbox-label" for="p2_#= data.id #"></label>
+	    # } #
+	</script>
+	
+	<script type="text/x-kendo-template" id="template3">
+	     # if (data.type!="Folder") { #
+	     	# if (data.canNotExport==true) { #
+	      		<input type="checkbox" id="p3_#= data.id #" data-xid='#= data.id #' data-op='3' class="k-checkbox" checked>
+	      	#} else {#
+	      		<input type="checkbox" id="p3_#= data.id #" data-xid='#= data.id #' data-op='3' class="k-checkbox" >
+	      	# } #	
+	      
+	        <label class="k-checkbox-label" for="p3_#= data.id #"></label>
+	    # } #
+	</script>
+	
+	<script type="text/x-kendo-template" id="template4">
+	     # if (data.type!="Folder") { #
+	     	# if (data.canNotPrint==true) { #
+	      		<input type="checkbox" id="p4_#= data.id #" data-xid='#= data.id #' data-op='4' class="k-checkbox" checked>
+	      	#} else {#
+	      		<input type="checkbox" id="p4_#= data.id #" data-xid='#= data.id #' data-op='4' class="k-checkbox" >
+	      	# } #	
+	      
+	        <label class="k-checkbox-label" for="p4_#= data.id #"></label>
+	    # } #
+	</script>
+	<script type="text/x-kendo-template" id="template5">
+	 
+	     	# if (data.Allowed==true) { #
+	      		<input type="checkbox" id="p5_#= data.id #" data-xid='#= data.id #' data-op='5' class="k-checkbox" checked>
+	      	#} else {#
+	      		<input type="checkbox" id="p5_#= data.id #" data-xid='#= data.id #' data-op='5' class="k-checkbox" >
+	      	# } #	
+	      
+	        <label class="k-checkbox-label" for="p5_#= data.id #"></label>
+	   
+	</script>
+	
+	<script type="text/x-kendo-template" id="template6">
+	    
+	     	# if (data.Forbidden==true) { #
+	      		<input type="checkbox" id="p6_#= data.id #" data-xid='#= data.id #' data-op='6' class="k-checkbox" checked>
+	      	#} else {#
+	      		<input type="checkbox" id="p6_#= data.id #" data-xid='#= data.id #' data-op='6' class="k-checkbox" >
+	      	# } #	
+	      
+	        <label class="k-checkbox-label" for="p6_#= data.id #"></label>
+	
+	</script>
+	</head>
+	<body>
+		
+		<div style="height:47px;width:100%;border-bottom:0px solid lightgray;background:#EEEEEE;">
+        <div id="logo">
+            	功能权限
+        </div>
+        <div id="toolbar">
+	        <div id="reportMainMenu">
+	        	<button id="Close" class="k-button" >关闭</button>
+	        </div>
+        </div>
+   </div>
+	<div class="left">
+		<div id='leftTreeDiv' style='width:90%;height:390px;overflow: hidden;'></div>
+	</div>
+	
+	<div style="width: 75%; height: 90%;margin-left: 23%; text-align: center;">
+			<blockquote class="layui-elem-quote" style="display: none;">
+			</blockquote>
+			<div class="layui-tab layui-tab-brief" lay-filter="demo">
+			  <ul class="layui-tab-title">
+			    <li class="layui-this">报表权限</li>
+			    <li>系统管理</li>
+			    <li>业务模型</li>
+			  </ul>
+			  <div class="layui-tab-content" style="padding: 10px;">
+			    <div class="layui-tab-item layui-show">
+			      	<div id="treelist"></div>
+			    </div>
+			    <div class="layui-tab-item">
+			    	<div id="treelist2"></div>
+			    </div>
+			    <div class="layui-tab-item">
+			    	<div id="treelist3"></div>
+			    </div>
+			   
+			  </div>
+			</div>
+			
+			<script>
+			layui.use(['layer', 'element'], function(){
+			  var layer = layui.layer
+			  ,element = layui.element();
+			  
+			  //监听Tab切换
+			  element.on('tab(demo)', function(data){
+			    //layer.msg('切换了：'+ this.innerHTML);
+			    //console.log(data);
+			  });
+			});
+			</script>
+	</div>
+	
+
+<!--
+	作者：offline
+	时间：2016-10-31
+	描述：
+
+<div id="foot">
+	<button type="button" class="btn btn-default">确定</button>
+	<button type="button" class="btn btn-default" style="margin-left: 20px;">取消</button>
+</div>
+	-->
+	<script>
+		var holderId;
+		$(document).ready(function() {
+                    setTimeout(function() {
+                    	initTreeList();
+                        loadLeftTree();
+                      
+                    }, 400);
+		});
+		
+		function initTreeList(){
+			 $("#treelist").kendoTreeList({
+                       
+                        columns: [
+                            { field: "name",title:"报表" },
+                            { field: "canView" ,title:"允许查看" , width:"100px",template: $("#template1").html() ,attributes: {style: "text-align: center"} },
+                            { field: "canModify" ,title:"允许编辑" ,width:"100px",template: $("#template2").html() ,attributes: {style: "text-align: center"} },
+                            { field: "canNotExport" ,title:"禁止输出" ,width:"100px",template: $("#template3").html() ,attributes: {style: "text-align: center"} },
+                            { field: "canNotPrint",title:"禁止打印" ,width:"100px",template: $("#template4").html(),attributes: {style: "text-align: center"} }
+                        ]
+                    });
+              $("#treelist2").kendoTreeList({
+                       
+                        columns: [
+                            { field: "Name",title:"功能" },
+                            { field: "Allowed" ,title:"允许访问" , width:"100px",template: $("#template5").html() ,attributes: {style: "text-align: center"} },
+                           
+                        ]
+                    });
+              $("#treelist3").kendoTreeList({
+                       
+                        columns: [
+                            { field: "Name",title:"模型名称" },
+                            { field: "Forbidden" ,title:"禁止访问" , width:"100px",template: $("#template6").html() ,attributes: {style: "text-align: center"} },
+                            
+                        ]
+                    });
+           
+    		 
+		}
+		function loadLeftTree(){
+				$.ajax({
+						type: "get",
+						dataType: "json",
+						cache: false,
+						async: true,
+						url: getWebApiAuthURI() + "/GetUserRoleTree/?token="+getUserToken(),
+						success: function(data) {
+							 var ds = new kendo.data.HierarchicalDataSource({
+			                    data: data
+			                });
+			
+			                $("#leftTreeDiv").kendoTreeView({
+			                    dataSource: ds,
+			                    change: onChange
+			                });
+						},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						alert(errorThrown);
+					}
+				});
+		}
+		function onChange(e) {
+			 		
+					   var data = $('#leftTreeDiv').data('kendoTreeView').dataItem(this.select());
+					   holderId = data.id;
+	                   $.ajax({
+							type: "get",
+							dataType: "json",
+							cache: false,
+							async: true,
+							url: getWebApiAuthURI() + "/GetHolderPurview/?token="+getUserToken()+"&holderId="+data.id,
+							success: function(data) {
+								 loadHolderPurview(data);
+							},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+                    	
+                   
+        }
+		
+		function loadHolderPurview(data){
+			
+			var dataSource = new kendo.data.TreeListDataSource({
+                        data: data.ReportPurviews,
+                        schema: {
+                            model: {
+                                id: "id",
+                                expanded: true
+                            }
+                        }
+                    });
+			var treeList = $("#treelist").data("kendoTreeList");
+    		treeList.setDataSource(dataSource);  
+    		
+    		var dataSource2 = new kendo.data.TreeListDataSource({
+                        data: data.FunctionPurviews,
+                        schema: {
+                            model: {
+                                id: "id",
+                                expanded: true
+                            }
+                        }
+                    });
+			var treeList2 = $("#treelist2").data("kendoTreeList");
+    		treeList2.setDataSource(dataSource2);  
+    		
+    		var dataSource3 = new kendo.data.TreeListDataSource({
+                        data: data.ModelPurviews,
+                        schema: {
+                            model: {
+                                id: "id",
+                                expanded: true
+                            }
+                        }
+                    });
+			var treeList3 = $("#treelist3").data("kendoTreeList");
+    		treeList3.setDataSource(dataSource3);  
+    		
+    		$(".k-checkbox").click(function(){
+    			var id = $(this).data("xid");
+    			var op = $(this).data("op");
+    			var result =  $(this).is(':checked');
+    			
+    			  $.ajax({
+							type: "get",
+							dataType: "json",
+							cache: false,
+							async: true,
+							url: getWebApiAuthURI() + "/SaveHolderPurview/?token="+getUserToken()+"&holderId="+holderId+"&resId="+id+"&op="+op+"&result="+result,
+							success: function(data) {
+								 
+							},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+    		});
+    		
+		}
+		
+		
+		 function closePage(){
+		 		var m = new Array();
+				m[0] = "CloseDocument";
+				m[1] = "fn_003";
+	
+				window.parent.postMessage(m,'*');
+		 }
+		
+		$("#Close").on('click', closePage);
+		
+
+	</script>
+	</body>
+</html>

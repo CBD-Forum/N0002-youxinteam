@@ -1,0 +1,94 @@
+nav {
+ 
+  top: 0.5em;
+  margin: 0 auto;
+  width: 95%;
+  margin-right: 10px;
+}
+nav ul {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  font-size: 0px;
+}
+nav ul li {
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 1.6em;
+  padding: 0 0.6em;
+  margin: 0 0;
+  display: inline-block;
+  list-style-type: none;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  -webkit-transition: all 0.5s ease-out;
+  transition: all 0.5s ease-out;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+nav ul li:hover {
+  color: black;
+}
+nav ul :nth-child(1) {
+  color: black;
+}
+nav ul :nth-child(1):hover {
+  'background-color: #f59700;
+}
+
+nav ul :nth-child(2) {
+  color: black;
+}
+nav ul :nth-child(2):hover {
+  'background-color: #f59700;
+}
+nav ul :nth-child(3) {
+  color: black;
+}
+nav ul :nth-child(3):hover {
+  'background-color: #f59700;
+}
+nav ul :nth-child(4) {
+  color: black;
+}
+nav ul :nth-child(4):hover {
+  'background-color: #f59700;
+}
+nav ul :nth-child(5) {
+  color: black;
+}
+nav ul :nth-child(5):hover {
+  background-color: #f59700;
+}
+nav ul :nth-child(6) {
+  color: darkgray;
+}
+nav ul :nth-child(6):hover {
+  background-color: #f59700;
+}
+nav ul :nth-child(7) {
+  color: darkgray;
+}
+nav ul :nth-child(7):hover {
+  background-color: #f59700;
+}
+nav ul :nth-child(8) {
+  color: darkgray;
+}
+nav ul :nth-child(8):hover {
+  background-color: #f59700;
+}
+nav ul :nth-child(9) {
+  color: darkgray;
+}
+nav ul :nth-child(9):hover {
+  background-color: #f59700;
+}
+nav .indicator {
+  pointer-events: none;
+  background-color: red;
+  -webkit-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+}

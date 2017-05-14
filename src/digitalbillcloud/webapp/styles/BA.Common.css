@@ -1,0 +1,326 @@
+﻿  		html
+        {
+         height:100%;
+         margin:0;
+        }
+		body
+		{
+			margin: 0px;
+			padding:0;
+			font-family : 宋体;
+			/*font-family: "microsoft yahei";*/
+			
+			/*font-family:"Segoe UI",Segoe,Tahoma,Arial,Verdana,sans-serif;*/
+			/*font-family:simsun;*/
+			
+	        width:100%;
+            height:100%;
+            overflow: auto;
+		}
+		
+		.mainIndexValue{
+
+				height: 50px;
+			}
+			
+			.mainIndex{
+				text-align:center;
+				
+				display:block; 
+				font-size: 2em;
+				color:#000000 ;
+				height: 50px;
+				line-height: 50px;
+				cursor: pointer; 
+				
+			}
+			.blankRow{
+				
+				height: calc( 25% - 25px );
+				width: 100%;
+			}
+			
+		.indexRightBorder
+		{
+			border-right:1px solid #a3a3a3;height: 50px
+		}
+		
+		.index-name{
+			text-align: center; height: 25;line-height:25px; text-align: center;vertical-align: middle
+		}
+	
+		.index-value{
+			text-align: center;height: 30;line-height:25px; text-align: center;vertical-align: middle
+		}
+		/*
+	 	.k-grid-content{
+           overflow: auto;
+           height: 120px;
+        }*/
+        .k-grid-footer {
+     		/*border-bottom-width: 0px;*/
+     		border-left-color: white;
+     		
+     		border-right-color: white;
+     		border-bottom-color: white;
+     		
+     	
+		}
+		.k-grid .k-grid-header th{
+		
+		/*background-color:#EFF9FB;*/
+		background-color:#F2F6FD;
+    	line-height: 1.9em;
+    	padding: .3em .4em;
+		}
+		
+		.k-grid .k-grid-footer {
+
+    	line-height: 3.4em;
+    	/*background-color:#F2F2F2 ;*/
+    	background-color:#FFFAF1;
+		}
+		
+		.k-grid-footer-wrap {
+			border-right-width: 0px;
+			/*background-color:#F2F2F2 ;*/
+			background-color:#FFFAF1;
+			
+			}
+		
+		.k-grid {
+	    		font-size: 0.75em;
+ 			border-radius: 0; 
+		}
+		.k-grid td {
+	        	border-bottom: 1px solid ;
+	        	border-right: 0px solid;
+	        	border-left: 0px solid  white;
+	        }
+	        
+	    .k-grid-footer-cell {
+	    	padding-top: 2px;
+	    	font-size: 1.1em;
+    		height: 26px;
+    		
+		}
+		
+		
+		/*
+		.table-cell{ 
+	 		text-align:left;
+	 		background:white;
+	 		color:black;
+		}*/
+		
+		.menulist {
+            position: fixed;
+            top:0px;
+            z-index: 2;
+            display: none;
+            background-color: #F2F2F2;
+            font-size: 10px;
+            
+        }
+       
+		.table-header-cell-drill{ 
+			/*
+			display:block; 
+			height:0px; 
+			width:0px;
+		 	border:5px solid #000;
+		  	border-color:#f00 #f00 transparent transparent; 
+		  	border-style:solid solid dashed dashed; 
+		  	line-height:0px;
+		  	text-align: right;
+		  	float: right;
+		  	margin-top: -0.6em;
+		  	margin-right: -0.6em;
+		  	*/
+		}
+
+/*
+		.k-grid  .k-grid-header  .k-header  .k-link {
+     		text-align: center;
+			color: #8ec441;
+ 		}
+ 		*/
+ 		.k-grid tr td {
+
+		    border-bottom: 1px solid #f2f2f2;
+		    border-left: 1px solid #f2f2f2;
+		   /* background-color: white;*/
+			
+		}
+		
+		.k-grid-footer tr td {
+	        	/*background-color:#F2F2F2 ;*/
+	        	background-color:#FFFAF1;
+	        	border-left-width: 1px; 
+	        }
+	    
+		
+		.k-grid tr {
+		     padding: 2px;
+		  /* background-color: white;*/
+		}
+		
+		.k-grouping-header, .k-grid-toolbar
+		{
+			  padding: 0px;
+		}
+		
+		
+		.k-alt {
+    		background-color: white;
+		}
+
+.k-grid-header:first-child th.k-header:first-child, .k-rtl thead.k-grid-header th.k-header:last-child, thead.k-grid-header th.k-header:first-child
+{
+	border-radius: 0px;
+}
+
+.reportToolbarButton
+{
+	margin-left: 10px;
+	padding-right: 13px;
+	padding-left: 13px;
+}
+#menu li span .k-i-arrow-s
+{
+	display: none;
+}
+
+		.background {
+            position: fixed;
+            width: 100%;
+            left: 0px;
+            top: 0px;
+            z-index: 1;
+            display: none;
+        }
+        
+        .left{ float:left; width:20px; background:white; height:100%}
+        .right{ float:right; width:20px; background:white;height:100% }
+        .center{ background:white; margin:0 20px;height:100%}
+        
+        .b-navbar
+		{
+			float:left ; 
+			width: 41px; 
+			background: #222D32; 
+			
+			height: calc(100% - 40px);
+			margin-top: 0px;
+		}
+		.b-workspace{
+			margin-left: 41px; 
+			height: calc(100% - 40px);
+		}
+
+        .k-menu .k-item, .k-menu.k-header {
+    		border: 0;
+    		background: transparent;
+		}
+		.k-menu .k-item, .k-widget.k-menu-horizontal>.k-item {
+			border-width: 0 0 0 0;
+		}
+
+      	#logo {
+            float:left; 
+            width: 250px;
+            margin-left: 30px;
+            margin-top: 10px;
+            font-size: 1em;
+            font-family: "微软雅黑";
+        }
+        
+        #toolbar {
+            width: 600px;
+            float: right; 
+            margin-right: 20px;
+            margin-top: 3px;
+            background: transparent;
+            text-align: right;
+        }
+        
+        #reportMainMenu {
+            float:right; 
+            width: 550px;
+            margin-left: 0px;
+            margin-top: 3px;
+            font-size: 14px;
+           
+           
+        }
+        
+          #reportMenu {
+            width: 40px;
+            float: right; 
+           
+        }
+        
+        
+         #reportTitle {
+           
+            margin-top: 0px;
+            font-size: 14px;
+            font-family: "微软雅黑";
+        }
+
+
+      
+        #menu h2 {
+            font-size: 1em;
+            text-transform: uppercase;
+            padding: 5px 5px;
+            background-color:transparent;
+            
+        }
+        
+	.metro {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    height: 70px;
+    margin-top: -30px; /* negative half of the height */
+    margin-left: 0px;
+}
+
+.OKButton{
+	background: #23A497;
+	width: 80px;
+	color: white;
+}
+
+.CancelButton{
+	width: 80px;
+}
+
+.drilldown
+{
+	font-size: 1.4em;
+	color: white;
+	text-decoration:none;
+	
+}
+a:link{
+text-decoration:none;
+}
+a:visited{
+text-decoration:none;
+}
+a:hover{
+text-decoration:none;
+}
+a:active{
+text-decoration:none;
+}
+
+.returnImg{
+	width: 18px;
+	height: 18px;
+	margin-right: 10px;
+	float: right;
+	display: none;
+}

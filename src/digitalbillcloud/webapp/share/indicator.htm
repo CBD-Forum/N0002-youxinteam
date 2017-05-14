@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/qkl.js"></script>
+		<style>
+			.indexName{
+				text-align: center;
+				height: 30px;
+				color: #848482;
+				line-height: 30px;
+			}
+			.indexValue{
+				text-align: center;
+				height: 40px;
+				line-height: 40px;
+				color: #23A497;
+				font-size: 1.4em;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="indexName" id="indexName">指标名称</div>
+		<div class="indexValue" id="indexValue">10000</div>
+		<script>
+		function getQueryString(){
+		
+		     var result = location.search.match(new RegExp("[\?\&][^\?\&]+=[^\?\&]+","g")); 
+		     if(result == null){
+		
+		         return "";
+		
+		     }
+		     for(var i = 0; i < result.length; i++){
+		
+		         result[i] = result[i].substring(1);
+		
+		     }
+		     return result;
+		
+		}
+		
+			function getIndicator(){
+				var cid = '1';
+				var x = getQueryString();
+				
+			  	if( x.length>0 ){
+			  		cid = x[0].substring(2)
+			  	}
+		  		
+		  
+				$.ajax({ 
+	           			type: "Get",
+	                	dataType: "json",
+	                	contentType: "application/json; charset=utf-8",
+				    	cache: false,
+				    	async: true,
+						
+				    	url: getWebApiAuthURI()+"/GetIndicatorValue/?token="+getUserToken()+"&cid="+cid,             
+	                	success: function (data) { 	
+	                		$("#indexName").text(data.Name)
+	                		$("#indexValue").text(data.Value)
+	                		
+	                	}, 
+	                	error: function (XMLHttpRequest, textStatus, errorThrown) { 
+	                        alert(errorThrown); 
+	                	} 
+	           	});	
+           }
+			$(document).ready(function() {
+                    setTimeout(function() {
+						
+                        getIndicator();
+                    }, 400);
+			});
+		</script>
+	</body>
+</html>

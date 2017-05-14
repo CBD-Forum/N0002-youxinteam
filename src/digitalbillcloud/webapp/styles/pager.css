@@ -1,0 +1,145 @@
+ .k-pager-numbers .lable-item {
+ 	border-radius: 1em;
+ 	margin-left: 5px;
+ 	color: #505968;
+ 	box-shadow: none;
+ 	border: none;
+ 	background-color: inherit;
+ 	margin-left: 5px;
+ }
+ 
+ .k-pager-numbers .k-state-selected {
+ 	min-width: 1.6em;
+ 	line-height: initial;
+ 	box-shadow: none;
+ 	border: none;
+ }
+ 
+ .k-pager-numbers .lable-item {
+ 	min-width: 1.5em;
+ 	line-height: inherit;
+ }
+ 
+ .k-pager-numbers .lable-item:hover {
+ 	color: #263248;
+ 	background-color: #b6bdca;
+ 	border-color: #bebec3;
+ 	/*border-style: solid;
+                border-width: 1px;*/
+ 	/*background-image: none,linear-gradient(to bottom,rgba(255,255,255,.3) 0,rgba(255,255,255,0) 100%);*/
+ }
+ 
+ .k-pager-numbers .active,
+ .k-pager-numbers .active:hover {
+ 	color: #fff;
+ 	background-color: #1984c8;
+ 	border-color: #1a87cd;
+ 	border-style: solid;
+ 	border-width: 1px;
+ 	margin-left: 5px;
+ 	box-shadow: none;
+ }
+ 
+ .k-pager-wrap {
+ 	line-height: 1.5em;
+ }
+ 
+ .k-pager-wrap .k-pager-nav.page-direct {
+ 	float: left;
+ 	border: 1px solid #ccc;
+ 	min-width: 1.5em;
+ 	height: inherit;
+ 	border-radius: 1.0833em;
+ 	line-height: inherit;
+ 	text-align: center;
+ 	margin-left: 3px;
+ 	background-color: inherit;
+ 	background-image: none, linear-gradient(to bottom, rgba(255, 255, 255, .3) 0, rgba(255, 255, 255, 0) 100%);
+ }
+ 
+ .k-pager-wrap .k-pager-nav.page-direct:hover {
+ 	color: #263248;
+ 	background-color: #b6bdca;
+ 	border-color: #bebec3;
+ }
+ 
+ .k-pager-wrap .page-direct.k-state-disabled:hover {
+ 	color: initial;
+ 	background-color: initial;
+ 	border-color: #ccc;
+ }
+ 
+.spinner {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  margin: 100px auto;
+}
+
+ 
+
+.double-bounce1, .double-bounce2 {
+
+  width: 100%;
+
+  height: 100%;
+
+  border-radius: 50%;
+
+  background-color: #1b9dde;
+
+  opacity: 0.8;
+
+  position: absolute;
+
+  top: 0;
+
+  left: 0;
+
+   
+
+  -webkit-animation: bounce 2.0s infinite ease-in-out;
+
+  animation: bounce 2.0s infinite ease-in-out;
+
+}
+
+ 
+
+.double-bounce2 {
+
+  -webkit-animation-delay: -1.0s;
+
+  animation-delay: -1.0s;
+
+}
+
+ 
+
+@-webkit-keyframes bounce {
+
+  0%, 100% { -webkit-transform: scale(0.0) }
+
+  50% { -webkit-transform: scale(1.0) }
+
+}
+
+ 
+
+@keyframes bounce {
+
+  0%, 100% { 
+
+    transform: scale(0.0);
+
+    -webkit-transform: scale(0.0);
+
+  } 50% { 
+
+    transform: scale(1.0);
+
+    -webkit-transform: scale(1.0);
+
+  }
+
+}

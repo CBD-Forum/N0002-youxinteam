@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    	<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=yes">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+       	<script src="../js/jquery.min.js"></script>
+   		<script src="../js/kendo.all.min.js"></script>
+		<script src="../js/mergeGrid.js"></script>
+    	<script src="../js/common.js"></script>
+    	<script src="../js/reportlayout.js"></script>
+		<script src="../js/layer.js"></script>
+		<script src="../js/jqPaginator.js" type="text/javascript" ></script>
+		<script src="../js/ba.filter.js"></script>
+		<script src="../js/messages/kendo.messages.zh-CN.min.js"></script>
+    	<script src="../js/cultures/kendo.culture.zh-CN.min.js"></script>
+		<link href="../styles/bootstrap.min.css" type="text/css" rel="stylesheet" />
+		<link href="../styles/kendo.common.min.css" rel="stylesheet">
+    	<link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+		<link href="../styles/pager.css" rel="stylesheet">
+    	<link href="../styles/BA.Common.css" rel="stylesheet">	
+		<link href="../styles/ba.kendo.ui.css" rel="stylesheet">
+		<style>
+			#sessionGrid{
+				height: calc(100% - 147px);
+			}
+		</style>
+	</head>
+	<body>
+		<div style="height: 25px;">
+			
+		</div>
+		<div>
+			<div id="sessionGrid"></div>
+		</div>
+		<script>
+		function createReportJson() {
+		
+			$.ajax({ 
+           			type: "Get",
+                	dataType: "json",
+                	contentType: "application/json; charset=utf-8",
+			    	cache: false,
+			    	async: true,
+					
+			    	url: getWebApiAuthURI()+"/GetCompanyBankAccoutList/?token="+getUserToken(),      
+                	success: function (data) { 	
+                		
+                			var h = $(window).height();
+                			$("#sessionGrid").empty();
+                			window.localStorage.setItem("ToCompanyId","");
+                			window.localStorage.setItem("ToCompanyName","");
+                			window.localStorage.setItem("ToBankAccount","");
+                			window.localStorage.setItem("ToBankName","");
+                			
+							createGrid(data,h-50);
+							
+							
+                	}, 
+                	error: function (XMLHttpRequest, textStatus, errorThrown) { 
+                        alert(errorThrown); 
+                	} 
+           	});					
+        }
+		
+		 function createGrid(rows,h) {
+            $("#sessionGrid").kendoGrid({
+                dataSource:{
+                    data: rows
+                },
+         		height:h,
+                groupable:  false,
+                sortable:  	true,
+                scrollable:	true,
+                filterable: true,
+                columnMenu: true,
+                columns: [
+                {
+                	field: "CompanyName",
+                    title: "企业",
+                   
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                },{
+                	field: "BankAccount",
+                    title: "银行账号",
+                   
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                }, {
+                    field: "BankName",
+                    title: "开户行 ",
+                    width: 150,
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                }, {
+                    field: "BankNO",
+                    title: "行号 ",
+                    width: 100,
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                }, {
+                    field: "BankAddress",
+                    title: "银行地址",
+                    width: 180,
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                },{ command: { text: "选择", click: showDetails }, title: "选择", width: "80px",headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    } 
+                   }
+                 ],
+                theme:      "bootstrap"
+            });
+        }
+		 
+		  function showDetails(e){
+		 	
+              var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+              var companyId = dataItem.CompanyId;
+              var companyName = dataItem.CompanyName;
+              var bankAccount = dataItem.BankAccount;
+              var bankName = dataItem.BankName;
+             
+              window.localStorage.setItem("ToCompanyId",companyId)
+              window.localStorage.setItem("ToCompanyName",companyName)
+              window.localStorage.setItem("ToBankAccount",bankAccount)
+              window.localStorage.setItem("ToBankName",bankName)
+                			
+             	
+              var index = parent.layer.getFrameIndex(window.name);
+			  parent.layer.close(index);
+             
+		 }
+		 
+		
+		  
+		  function registerEvent(){
+		  	$("#Refresh").on('click', refreshPage);
+			$("#Close").on('click', closePage);
+		 }
+		 
+		 function refreshPage(){
+		 	
+		 	createReportJson();
+		 	
+		 }
+		 
+		  function closePage(){
+		 		var m = new Array();
+				m[0] = "CloseDocument";
+				m[1] = "fn_098";
+	
+				window.parent.postMessage(m,'*');
+		 }
+		 
+		 $(document).ready(function() {
+                    setTimeout(function() {
+						kendo.culture("zh-CN");
+                        createReportJson();
+                        registerEvent();
+                    }, 400);
+			});
+		 </script>
+	</body>
+</html>

@@ -1,0 +1,425 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>用友数字票据云</title>
+		<script src="../js/jquery.min.js"></script>
+	
+		<script src="../js/layer.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/kendo.all.min.js"></script>
+		
+		<link href="../styles/kendo.common.min.css" rel="stylesheet">
+    	<link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+		<link href="../styles/BA.common.css" rel="stylesheet">
+		
+		<style>
+			
+			body
+			{
+				overflow: hidden;
+			}
+			#header{
+			    box-shadow: 0 1px 4px rgba(0,0,0,.3);
+			    background: #607D8B;
+			    height: 40px;
+			    }
+			#fileTreeDiv{
+				color: black;
+				font-size: 0.9em;
+			}
+			.b-doc{
+				width: 100%;
+			}
+			.b-tv-folder{
+				color: black;
+			}
+			
+			.b-w-li-d{
+				margin-left: 0px;
+				margin-top: 6px;
+				height: 25px;
+				font-size:1em;
+				
+				
+			}
+
+			#windowList li:hover {
+				color: #00ABFC;
+				cursor: pointer;
+			}
+			
+			#layui-layer-content{
+				background: dimgray;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="header">
+			<div style="float: left; width: 41px;height: 40px; background-image: url('../images/app.png');box-shadow: 0 1px 4px rgba(0,0,0,.3)"></div>
+			<div style="margin-right: 30px; float: right; height: 100%; width: 210px; text-align: right;">
+				<a href="../../designer.aspx" target="_blank" id="designer"><img src="../images/designer.png"  style="margin-top: 8px;width: 20px;height: 20px; margin-right: 20px; border: 0px;cursor: pointer;" id="designerButton" title="设计报表"/></a>
+				
+				<img src="../images/fullscreen.png"  style="margin-top: 8px;width: 20px;height: 20px; margin-right: 20px;cursor: pointer;" id="fullscreenButton" title="全屏"/>
+				
+				<img src="../images/loginuser.png"  style="margin-top: 8px;width: 26px;height: 24px;cursor: pointer;" id="imgUser"/>
+				<span style="margin-left: 5px;margin-top: 2px;color: white; font-size: 14px; cursor: pointer;" id="spanCurrentUser">低杆程序猿</span>
+			</div>
+			<div style="margin-left: 41px; margin-right:170px ; height: 100%; text-align: left; vertical-align: middle;">
+				<span style="font-size: 1.1em; color: white; vertical-align: middle;line-height : 40px;margin-left: 30px;" id="spanCompany">优普商业分析</span>
+			</div>
+		</div>
+		
+		<div class="b-navbar">
+			<div style="margin-top: 80px;margin-left: 7px;">
+				<img src="../images/home.png" id="btnHomepage"  style="display: block; width: 20px; height: 20px;cursor: pointer;" title="首页" data-container="body" data-toggle="popover" data-content="进入我的首页">
+				<img src="../images/dashboard.png" id="btnDashboard" style="display: block;width: 20px; height: 20px;margin-top: 37px;cursor: pointer;" title="管理驾驶舱">
+				<img src="../images/report.png" id="btnFileTree" style="display: block;width: 20px; height: 20px;margin-top: 37px;cursor: pointer;" title="报表目录">
+				<img src="../images/window.png" id="btnWindow" style="display: block;width: 20px; height: 20px;margin-top: 37px;cursor: pointer;" title="已打开窗口">
+				<img src="../images/search.png" id="btnSearch" style="display: block;width: 20px; height: 20px;margin-top: 37px;cursor: pointer;" title="搜索">
+				<img src="../images/setting.png" id="btnSetting" style="display: block;width: 20px; height: 20px;margin-top: 37px;cursor: pointer;" title="系统管理">
+			</div>
+		</div>
+
+
+		
+        	
+       
+       
+		<div class="b-workspace" id="mainDiv">
+			<div class="b-doc" id='searchDiv' style="display: none;" data-title="搜索">
+				<iframe src="adhocQuery.htm" id='searchIframe' style="width: 100%;height: 100%;" scrolling="no"  frameborder=”no” border=”0″ marginwidth=”0″ ></iframe>
+			</div>
+			
+			<div class="b-doc" id='homepageDiv' data-title="首页">
+                <iframe src="homePage.htm" id='homepageIframe' style="width: 100%;height: 100%;" scrolling="no"  frameborder=”no” border=”0″ marginwidth=”0″ ></iframe>
+			</div>
+			
+		</div>
+		
+		 
+		<script>
+			var layerId;
+    		function load(){
+    		
+	    		 $(window).resize( function(){	
+				 	
+				 		updateAllDocument();
+	    		});
+	    		
+	    		$('#spanCurrentUser').on('click', function(event){
+					showUser();
+				});
+				$('#imgUser').on('click', function(event){
+					showUser();
+				});
+	    		
+	    		$('#btnHomepage').on('click', function(event){
+					showHomepage();
+				});
+				$('#btnDashboard').on('click', function(event){
+					showDashboard();
+				});
+				$('#btnFileTree').on('click', function(event){
+					showFileTree();
+				});
+				$('#btnWindow').on('click', function(event){
+					showWindow();
+				});
+				$('#btnSearch').on('click', function(event){
+					showSearch();
+				});
+				$('#btnSetting').on('click', function(event){
+					showSetting();
+				});
+				
+				$("#designer").attr("href", "../../designer.aspx?token="+getUserToken()+"&companyCode="+getCompanyCode());
+				$("#spanCurrentUser").text(window.localStorage.getItem("BAUserName"));
+				$("#spanCompany").text(window.localStorage.getItem("BACompany"));
+				
+				$("#fullscreenButton").on('click', function(event){	
+					fullScreen();
+				});
+				
+    			window.addEventListener('message',function(e){
+    			
+	    			var m = e.data;
+	    			if( m[0]=="OpenDocument")
+	    				openReportDocument(m[1],m[2],m[3]);
+	    			if( m[0]=="CloseDocument"){
+	             		closeDocument(m[1]);
+	             	}
+	             	if( m[0]=="ShowDialog")
+	    				showDialog(m[1],m[2]);
+	    				
+	             	if( m[0]=="adhocQuery"){	
+	             		showSearch();
+	    				window.frames[0].postMessage(m,'*');
+	    			}
+	         	},false);
+	        }
+
+			var fileLayerId,windowLayerId;
+			
+			function showFileTree(){
+				var w = $(this).height()-40;
+		
+				fileLayerId = layer.open({
+								  type: 1,
+								  shift:5,
+								  title:"文档目录",
+								  shade: [0.6, '#393D49'],
+								  shadeClose: true, //开启遮罩关闭
+								  area: ['300px', w+'px'], //宽高
+								  content: "<div id='fileTreeDiv' style='margin-top:5px;margin-left:5px;width:290px;background:white;height:98%'></div>",
+								  offset: ['41px', '40px'], 
+								});
+								
+								
+				$.ajax({
+						type: "get",
+						dataType: "json",
+						cache: false,
+						async: true,
+						url: getWebApiURI() + "/GetFileTree/?token="+getUserToken()+"&type=0",
+						success: function(data) {
+							 var ds = new kendo.data.HierarchicalDataSource({
+			                    data: data
+			                });
+			
+			                $("#fileTreeDiv").kendoTreeView({
+			                    dataSource: ds,
+			                    change: onChange
+			                });
+						},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						alert(errorThrown);
+					}
+				});
+			}
+			
+			function showHomepage(){
+				
+				showDocument("homepageDiv")
+			}
+			function showWindow(){
+				var w = $(this).height()-40;
+				
+				windowLayerId = layer.open({
+								  type: 1,
+								  shift:5,
+								  title:"已打开的文档",
+								  shade: [0.6, '#393D49'],
+								  shadeClose: true, //开启遮罩关闭
+								  area: ['300px', w+'px'], //宽高
+								  content: "<div id='windowDiv' style='margin-top:5px;margin-left:5px;width:290px;background:white;height:90%'></div>",
+								  offset: ['41px', '40px'], 
+								});
+				
+			
+				var  h = "<ul id='windowList'>";
+			
+				$(".b-doc").each(function( index, element ){
+						var t = $(this).data("title");
+						var i = $(this).attr("id");
+						if( !(i=="homepageDiv"|| i=="searchDiv") )
+							h = h + "<li class='b-w-li-d' data-reportid='"+i+"' ><a>"+t+"</a></li>";
+				});
+			
+				h = h + "</ul>";
+
+				$(h).appendTo($("#windowDiv"));
+				
+				$('#windowDiv li a').on('click', function(event){
+			    	var id = $(event.target).parent().data("reportid");
+			    	showDocument(id);
+			    	layer.close(windowLayerId);
+				});
+				
+				
+				$ ("#windowDiv li").hover(function(){
+			        	$(this).addClass('hover');
+			       		var h= "<span id='windowAction' style='float:right;margin-right:5px;margin-top:5px'><img id='imgRemoveDoc' src='../images/close.png' style='margin-right:10px'></span>";
+			       		$(h).appendTo($(this));
+			       		
+			       		$('#imgRemoveDoc').on('click',function(event){
+			       			
+			       			var target = event.target;
+			       			var par = $(event.target).parent().parent();
+							var id = par.data("reportid");
+							closeDocument(id);
+							par.remove();
+						});
+				
+			       		
+			  		},function(){
+			       		$(this).removeClass('hover');
+			        	$('#windowAction').remove();
+			  	});
+								
+			}
+			
+			function closeDocument(id){
+				
+				$("#"+id).prev().show();       
+				//$("#"+id +" + .b-doc").show();
+				$("#"+id).remove();
+             	//$(".b-doc:first").show();
+			}
+			
+			function showSetting(){
+				var w = $(this).height()-40;
+				
+				windowLayerId = layer.open({
+								  type: 1,
+								  shift:5,
+								  title:"系统管理",
+								  shade: [0.6, '#393D49'],
+								  shadeClose: true, //开启遮罩关闭
+								  area: ['300px', w+'px'], //宽高
+								  content: "<div id='sysManagerDiv' style='margin-top:5px;margin-left:5px;width:290px;background:white;height:90%'></div>",
+								  offset: ['41px', '40px'], 
+								});
+				
+				
+								
+				$.ajax({
+						type: "get",
+						dataType: "json",
+						cache: false,
+						async: true,
+						url: getWebApiAuthURI() + "/GetFunctionList/?token="+getUserToken(),
+						success: function(data) {
+							var len = data.Items.length;
+							var  h = "<ul id='functionList'>";
+							for(var i = 0; i < len; i++) {
+								var fi = data.Items[i];
+								h = h + "<li class='b-w-li-d' data-url='"+fi.URL+"' data-code='"+fi.Code+"' data-function='"+fi.Name+"'  ><a>"+fi.Name+"</a></li>";
+							}
+							
+							h = h + "</ul>";
+							$(h).appendTo($("#sysManagerDiv"));
+							registerEvent();
+						},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						alert(errorThrown);
+					}
+				});
+				
+			}
+			
+			function registerEvent(){
+				$('#functionList li a').on('click', function(event){
+					var id = "fn_"+$(event.target).parent().data("code");
+			    	var url = $(event.target).parent().data("url");
+			    	var text = $(event.target).parent().data("function");
+			    	openDocument(id,url,text);
+			    	//showDocument(id);
+			    	layer.close(windowLayerId);
+				});
+			}
+			
+			
+			
+			function showSearch(){
+				showDocument("searchDiv");
+				
+			}
+			
+			function showDashboard(){
+				openDocument("dashboard","dashboard.htm","管理驾驶舱");
+			}
+			
+			function showUser(){
+				layerId = layer.tips("<div id='divUser' style='margin:0px;background:#F2F2F2;width:210px;height:200px'></div>", '#spanCurrentUser', {
+							  tips: 3,
+							  time: 0,
+							  closeBtn: 0, 
+							  shade: [0.6, '#393D49'],
+							  shadeClose: true, //开启遮罩关闭
+							  area: ['210px', '200px'] //宽高
+							});
+
+				var html = "<div style='height: 210px; background: #F2F2F2;width: 210px;'>";
+				html =  html+"	<div style='height: 120px; background: #23A497; text-align: center;'>";
+				html =  html+"		<div style='height: 10px;'></div>";
+				html =  html+"		<div ><img src='../images/userphoto.png'></div>";
+				html =  html+"	</div>";
+				html =  html+"	<div style='height: 20px; padding: 10px; font-size: 14px; text-align: center;'><label>"+window.localStorage.getItem("BAUserCode")+"</label></div>";
+				html =  html+"  <div style='height: 10px;'></div>";
+				html =  html+"  <div style='text-align: center;'><button class='k-button' style='width: 100px;' id='btnModifyPassword'>修改密码</button><button class='k-button' style='width: 70px; margin-left: 30px;' id='btnLogout'>注销</button></div>";
+				html =  html+"</div>";
+			
+		
+				$(html).appendTo($("#divUser"));
+				
+				$('#btnLogout').on('click', function(event){
+						location.href = "../login.htm";
+				});
+				$('#btnModifyPassword').on('click', function(event){
+						
+						layer.close(layerId);
+						showModifyPassword();
+				});
+		
+				/*
+				layer.tips("<button id='logout' class='k-button' style='width:60px;margin-left: 10px;background: #23A497;color: white;'>搜素</button>", '#spanCurrentUser', {
+				  tips: 3
+				});*/
+			}
+			
+			function showModifyPassword(){
+				layer.open({
+											  type: 2,
+											  shift:5,
+											  title:"修改密码",
+											  shade: [0.6, '#393D49'],
+											  shadeClose: true, //开启遮罩关闭
+											  area: ['400px', '300px'], //宽高
+											  content: "modifyPwd.htm",
+											 
+											});
+			}
+			
+			
+			
+			function onChange(e) {
+			 		
+					var data = $('#fileTreeDiv').data('kendoTreeView').dataItem(this.select());
+                    if(!data.report)
+                    	return;
+                    
+                    layer.close(fileLayerId);
+                    
+					openReportDocument(data.id,data.text,data.htmlPage);
+				
+           }
+			
+			function loadUserPurview(){
+				$.ajax({
+						type: "get",
+						dataType: "json",
+						cache: false,
+						async: true,
+						url: getWebApiAuthURI() + "/GetFunctionList/?token="+getUserToken(),
+						success: function(data) {
+							if( data.ShowFunctionTree==false)
+									$("#btnSetting").hide();
+							if( data.CanCreateReport==false)
+									$("#designer").hide();
+							
+						},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						alert(errorThrown);
+					}
+				});
+			}
+			
+			$(document).ready(function() {
+				load();
+				loadUserPurview();
+				updateAllDocument();
+			});
+		</script>
+	</body>
+</html>

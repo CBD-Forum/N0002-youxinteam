@@ -1,0 +1,105 @@
+.k-picker-wrap{
+    			border-top-width: 0px;
+    			border-right-width: 0px;
+    			border-left-width: 0px;
+    			border-radius:0px;
+    			background-color: #EEEEEE;
+    			box-shadow:none;
+}
+
+/*
+.k-state-hover{
+	
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-left-width: 0px;
+	border-radius:0px;
+	background-color: #EEEEEE;
+	box-shadow:none;
+}*/
+
+
+.k-combobox .k-input, .k-numeric-wrap .k-input, .k-picker-wrap .k-input{
+	border-radius:0px;
+	background-color: white;
+}
+/*
+.k-calendar .k-state-focused
+{
+	border-color: transparent;
+	border-radius:0px;
+	border-width: 0px;
+	background-color: red;
+	box-shadow:none;
+}
+
+.k-state-focused{
+	border-color: transparent;
+	border-radius:0px;
+	border-width: 0px;
+	background-color: #EEEEEE;
+	box-shadow:none;
+}
+*/
+.k-state-default>.k-select {
+	
+	background-color: white;	
+	border: solid 0px #EEEEEE ;
+}
+
+/*
+.k-i-calendar {
+    background-image: url('../images/xiala.png') !important;
+    height: 16px !important;
+    width: 16px !important;
+    background-size: 16px 16px;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+	box-shadow:none;
+}
+*/
+.k-textbox.k-space-right {
+	border-top-width: 0px;
+    border-right-width: 0px;
+    border-left-width: 0px;
+    border-radius:0px;
+    background-color: transparent;
+}
+.k-picker-wrap.k-state-default.k-state-focused{
+	box-shadow:none;
+}
+.k-autocomplete.k-state-default .k-input, .k-combobox .k-state-default .k-input, .k-multiselect-wrap, .k-numeric-wrap.k-state-default .k-input, .k-picker-wrap.k-state-default .k-input, .k-progress-status-wrap, .k-slider-selection, .k-slider-track{
+	box-shadow:none;
+}
+.k-datetimepicker .k-select+.k-select, .k-dropdown-wrap .k-select, .k-list-container.k-state-border-right, .k-numeric-wrap .k-select, .k-picker-wrap .k-select {
+	border-radius: 0px;
+	}
+.k-autocomplete, .k-dropdown-wrap, .k-numeric-wrap, .k-picker-wrap, .k-textbox {
+	border-top-width: 0px;
+    border-right-width: 0px;
+    border-left-width: 0px;
+     border-bottom-width: 1px;
+    border-radius:0px;	
+    
+}
+.k-dropdown-wrap.k-state-default.k-state-focused{
+	box-shadow:none;
+}
+
+/*
+.k-i-arrow-s {
+    background-image: url('../images/xiala.png') !important;
+    height: 16px !important;
+    width: 16px !important;
+    background-size: 16px 16px;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+	box-shadow:none;
+}*/
+
+
+
+.k-spreadsheet-formula-bar{
+	height: 0px;
+	display: none;
+}

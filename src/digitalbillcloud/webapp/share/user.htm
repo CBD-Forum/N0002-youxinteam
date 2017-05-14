@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"> 
+	<title>用户管理</title>
+	
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/kendo.all.min.js"></script>
+	
+	<script type="text/javascript" src="../js/common.js" ></script>
+	<script src="../js/layer.js"></script>
+	<link href="../styles/kendo.common.min.css" rel="stylesheet">
+    <link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+   	<link href="../styles/kendo.dataviz.min.css" rel="stylesheet">
+	
+	<link href="../styles/ba.kendo.ui.css" rel="stylesheet">
+	<link rel="stylesheet"  href="../styles/BA.Common.css">
+	
+	<style>
+		html{height: 100%;}
+		body{height: 100%;}
+		.left{
+			background: #F2F2F2;
+			float: left;
+			width: 300px;
+			height: 100%;
+		}
+		.form-control{
+			width: 200px;
+			height: 30px;
+		}
+		.form-group{
+			padding-top: 20px;
+		}
+		.btn-default{
+			width: 80px;
+		}
+		
+		
+		.fieldlist {
+                margin: 1em 0em -2em;
+                padding: 0px;
+            }
+
+            .fieldlist li {
+                list-style: none;
+                padding-bottom: 2em;
+            }
+             .fieldlist label {
+                /*display: block;*/
+                display:inline-block;
+                width: 100px;
+                text-align: right;
+                padding-right: 10px;
+                font-size: 13px;
+                color: #444;
+                
+            }
+            
+            input.k-textbox {
+            	
+    		width: 200px;
+    		height: 30px;
+    	}
+    	
+		#foot{
+			position:fixed;
+			_position:absolute;
+			bottom:0px;
+			height: 50px;
+			padding: 10px;
+			margin-left: 300px;
+			background: yellowgreen;
+			width: calc(100% - 300px);
+			bottom:0px;
+		}
+		
+		.k-checkbox-label:before {
+			width: 16px;
+			height: 16px;
+		}
+		.k-button{
+			min-width: 60px;
+		}
+	</style>
+</head>
+<body>
+	 <div style="height:47px;width:100%;border-bottom:0px solid lightgray;background:#EEEEEE;">
+        <div id="logo">
+            	用户管理
+        </div>
+        <div id="toolbar">
+	        <div id="reportMainMenu">
+	        	<button id="CreateUser" class="k-button">新建</button>
+	        	<button id="ModifyUser" class="k-button">修改</button>
+	        	<button id="DeleteUser" class="k-button">删除</button>
+	        	<button id="AssignRole" class="k-button">归属角色</button>
+	        	<button id="Close" class="k-button" >关闭</button>
+	        </div>
+        </div>
+   </div>
+	<div class="left">
+		<div id='leftTreeDiv' style='width:90%;height:390px;overflow: hidden;'></div>
+	</div>
+	
+	<div style="width: 800px; height: 80%;margin-left: 300px;margin-top:40px; text-align: center;">
+		 <ul class="fieldlist">
+            <li>
+                <label for="txtUserCode">用户名</label>
+                <input id="txtUserCode" type="text" class="k-textbox"  />
+            </li>
+            <li>
+                <label for="txtUserName">姓名</label>
+                <input id="txtUserName" type="text" class="k-textbox"  />
+            </li>
+            <li>
+                <label for="txtTelephone">电话</label>
+                <input id="txtTelephone" type="text" class="k-textbox"  />
+            </li>
+            <li>
+                <label for="txtEMail">邮箱</label>
+                <input id="txtEMail" type="text" class="k-textbox"  />
+            </li>
+             <li>
+                <label for="txtWeixin">微信号</label>
+                <input id="txtWeixin" type="text" class="k-textbox"  />
+            </li>
+            <li>
+            	  <label for="txtStatus">状态</label>
+                  <input id="txtStatus" type="text" class="k-textbox"  />
+            </li>
+        </ul>
+	</div>
+	
+
+<!--
+	作者：offline
+	时间：2016-10-31
+	描述：
+
+<div id="foot">
+	<button type="button" class="btn btn-default">确定</button>
+	<button type="button" class="btn btn-default" style="margin-left: 20px;">取消</button>
+</div>
+	-->
+	<script>
+		var userId;
+		$(document).ready(function() {
+                    setTimeout(function() {
+                    	load();
+                        loadLeftTree();
+                    }, 400);
+		});
+		
+		function load(){
+			$("#leftTreeDiv").kendoTreeView({
+			                    
+			                    change: onChange
+			                });
+		}
+		function loadLeftTree(){
+				$.ajax({
+						type: "get",
+						dataType: "json",
+						cache: false,
+						async: true,
+						url: getWebApiAuthURI() + "/GetUserTree/?token="+getUserToken(),
+						success: function(data) {
+							 var ds = new kendo.data.HierarchicalDataSource({
+			                    data: data
+			                });
+			                
+			                var ds = new kendo.data.HierarchicalDataSource({
+			                    data: data
+			                });
+			
+			                $("#leftTreeDiv").data("kendoTreeView").setDataSource(ds);
+			
+			                
+						},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						alert(errorThrown);
+					}
+				});
+		}
+		function onChange(e) {
+			 		
+					   var data = $('#leftTreeDiv').data('kendoTreeView').dataItem(this.select());
+	                   userId = data.id;
+	                   $.ajax({
+							type: "get",
+							dataType: "json",
+							cache: false,
+							async: true,
+							url: getWebApiAuthURI() + "/GetUser/?token="+getUserToken()+"&userId="+data.id,
+							success: function(data) {
+								 loadUser(data);
+							},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+                    	
+                   
+        }
+		
+		function loadUser(user){
+			$("#txtUserCode").val(user.Code);
+			$("#txtUserName").val(user.Name);
+			$("#txtEMail").val(user.EMail);
+			$("#txtTelephone").val(user.Telephone);
+			$("#txtWeixin").val(user.Weixin);
+			
+			if( user.Forbidden==true)
+				$("#txtStatus").val("停用");
+			else
+				$("#txtStatus").val("正常");
+		}
+		
+		function createUser(){
+			  layer.open({
+							  type: 2,
+							  shift:5,
+							  title:"新建用户",
+							  shade: [0.6, '#393D49'],
+							  shadeClose: true, //开启遮罩关闭
+							  area: ['480px', '490px'], //宽高
+							  content: "editUser.htm?id=",
+							  end: function(){ 
+							  	loadLeftTree();
+							  },
+						});
+		}
+		function modifyUser(){
+			 layer.open({
+							  type: 2,
+							  shift:5,
+							  title:"修改用户",
+							  shade: [0.6, '#393D49'],
+							  shadeClose: true, //开启遮罩关闭
+							  area: ['480px', '490px'], //宽高
+							  content: "editUser.htm?id="+userId,
+							  end: function(){ 
+							  	loadLeftTree();
+							  },
+						});
+		}
+		function deleteUser(){
+			if( userId=="" || userId==undefined)
+				return;
+			$.ajax({
+							type: "get",
+							dataType: "json",
+							cache: false,
+							async: true,
+							url: getWebApiAuthURI() + "/DeleteUser/?token="+getUserToken()+"&userId="+userId,
+							success: function(data) {
+								 loadLeftTree();
+							},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+		}
+		function assignRole(){
+			layer.open({
+							  type: 2,
+							  shift:5,
+							  title:"归属角色",
+							  shade: [0.6, '#393D49'],
+							  shadeClose: true, //开启遮罩关闭
+							  area: ['480px', '450px'], //宽高
+							  content: "assignRole.htm?id="+userId,
+							  end: function(){ 
+							  	
+							  },
+						});
+		}
+		 function closePage(){
+		 		var m = new Array();
+				m[0] = "CloseDocument";
+				m[1] = "fn_002";
+	
+				window.parent.postMessage(m,'*');
+		 }
+		$("#CreateUser").on('click', createUser);
+		$("#ModifyUser").on('click', modifyUser);
+		$("#DeleteUser").on('click', deleteUser);
+		$("#AssignRole").on('click', assignRole);
+		$("#Close").on('click', closePage);
+	</script>
+</body>
+</html>

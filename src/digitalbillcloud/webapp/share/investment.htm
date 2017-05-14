@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    	<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=yes">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+       	<script src="../js/jquery.min.js"></script>
+   		<script src="../js/kendo.all.min.js"></script>
+
+    	
+		<link href="../styles/bootstrap.min.css" type="text/css" rel="stylesheet" />
+		<link href="../styles/kendo.common.min.css" rel="stylesheet">
+    	<link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+
+		<style>
+			
+			
+			
+			
+		</style>
+	</head>
+	<body>
+	  	<center><h2>股权追溯</h2></center>
+		
+		<div style="border:solid white 0px">
+			 <div id="diagram" style="border:solid white 0px"></div>
+		</div>
+		
+	
+		<script>
+		function createReportJson() {
+		
+			$.ajax({ 
+           			type: "Get",
+                	dataType: "json",
+                	contentType: "application/json; charset=utf-8",
+			    	cache: false,
+			    	async: true,
+					
+			    	url: getWebApiAuthURI()+"/GetBankReceiptList/?token="+getUserToken(),             
+                	success: function (data) { 	
+                		
+                			var h = $(window).height();
+                			$("#sessionGrid").empty();
+							createGrid(data,h-50);
+							
+							
+                	}, 
+                	error: function (XMLHttpRequest, textStatus, errorThrown) { 
+                        alert(errorThrown); 
+                	} 
+           	});					
+        }
+		
+		 function createGrid(rows,h) {
+		           
+createDiagram();
+			
+		
+        }
+		 
+		  function visualTemplate(options) {
+            var dataviz = kendo.dataviz;
+            var g = new dataviz.diagram.Group();
+            var dataItem = options.dataItem;
+
+           
+                g.append(new dataviz.diagram.Rectangle({
+                    width: 180,
+                    height: 50,
+                    stroke: {
+                        width: 0
+                    },
+                    fill: "#e8eff7"
+                }));
+
+                g.append(new dataviz.diagram.Rectangle({
+                    width: 8,
+                    height: 50,
+                    fill: dataItem.color,
+                    stroke: {
+                        width: 0
+                    }
+                }));
+            
+            var y = dataItem.name;
+            var x  = y.length;
+            if(x>16)
+            	y=y.substr(0,15)+".";
+           
+            if( x>8){
+            	var x1 = y.substr(0,8);
+            	var x2 = y.substr(8,x-8)
+	            g.append(new dataviz.diagram.TextBlock({
+	                text: x1,
+	                x: 15,
+	                y: 5,
+	                fill: "black"
+	            }));
+	            
+	             g.append(new dataviz.diagram.TextBlock({
+	                text: x2,
+	                x: 15,
+	                y: 25,
+	                fill: "black"
+	            }));
+            }
+            else{
+            	 
+	             g.append(new dataviz.diagram.TextBlock({
+	                text: y,
+	                x: 82-(y.length-1)*7,
+	                y: 15,
+	                fill: "black"
+	            }));
+            }
+            
+            
+               g.append(new dataviz.diagram.TextBlock({
+	                text: dataItem.rate,
+	                x: 150,
+	                y: 5,
+	                fill: "black"
+	            }));
+
+            return g;
+        }
+		  
+		  function visualTemplate2(options) {
+            var dataviz = kendo.dataviz;
+            var g = new dataviz.diagram.Group();
+            var dataItem = options.dataItem;
+
+            g.append(new dataviz.diagram.Rectangle({
+                width: 210,
+                height: 75,
+                stroke: {
+                    width: 0
+                },
+                fill: dataItem.colorScheme
+            }));
+
+            g.append(new dataviz.diagram.TextBlock({
+                text: dataItem.firstName ,
+                x: 85,
+                y: 10,
+                fill: "#fff"
+            }));
+            
+            g.append(new dataviz.diagram.TextBlock({
+                text: dataItem.lastName,
+                x: 85,
+                y: 30,
+                fill: "#fff"
+            }));
+            
+
+            g.append(new dataviz.diagram.TextBlock({
+                text: dataItem.title,
+                x: 85,
+                y: 50,
+                fill: "#fff"
+            }));
+
+            g.append(new dataviz.diagram.Image({
+                source: "../images/" + dataItem.image,
+                x: 20,
+                y: 20,
+                width: 32,
+                height: 32
+            }));
+
+            return g;
+        }
+		  
+		  function createData1(){
+		  	 var data = [{
+		  	  		rate: "",
+		            name: "中丰通股份有限公司",
+		            color: "#00C0EF",
+		  	 		items: [{
+					            rate: "40",
+					            name: "上海中丰通有限公司",
+					            color: "#DD4B39",
+					            items: [{
+					                rate: "40",
+					                name: "企业",
+					                color: "#DD4B39",
+					                items: [{
+					                    rate: "80",
+					                    name: "李国庆",
+					                    color: "#F39C12"
+					                	},{
+					                    rate: "20",
+					                    name: "蔡名",
+					                    color: "#F39C12"
+					                	}]
+						            }, {
+						                rate: "60",
+						                name: "北京中丰通有限公司",
+						                color: "#DD4B39",
+						                items: [{
+							                    rate: "60",
+							                    name: "王春霞",
+							                    color: "#F39C12"
+			                			},{
+							                    rate: "40",
+							                    name: "张明辉",
+							                    color: "#F39C12"
+			                			}]
+			            		}]
+		           	},{
+		           		rate: "60",
+		                name: "中丰通科技有限公司",
+		                color: "#DD4B39",
+		                items: [{
+			                    rate: "52",
+			                    name: "杜拉拉",
+			                    color: "#F39C12"
+            			},{
+			                    rate: "48",
+			                    name: "姚杰",
+			                    color: "#F39C12"
+            			}]
+		           	}]
+		        }];
+		        
+		     return data;
+		  }
+
+		function createData2(){
+		  	 var data = [{
+		  	  		rate: "",
+		            name: "天地源科技股份有限公司",
+		            color: "#00C0EF",
+		  	 		items: [{
+					            rate: "37",
+					            name: "中丰通技术有限公司",
+					            color: "#DD4B39",
+					            items: [{
+					                rate: "70",
+					                name: "浙江天地源有限公司",
+					                color: "#DD4B39",
+					                items: [{
+					                    rate: "45",
+					                    name: "李国庆",
+					                    color: "#F39C12"
+					                	},{
+					                    rate: "40",
+					                    name: "蔡德明",
+					                    color: "#F39C12"
+					                	},{
+					                    rate: "15",
+					                    name: "李珊",
+					                    color: "#F39C12"
+					                	}]
+						            }, {
+						                rate: "30",
+						                name: "上海天地源有限公司",
+						                color: "#DD4B39",
+						                items: [{
+							                    rate: "61",
+							                    name: "韩仁义",
+							                    color: "#F39C12"
+			                			},{
+							                    rate: "39",
+							                    name: "王一辉",
+							                    color: "#F39C12"
+			                			}]
+			            		}]
+		           	},{
+		           		rate: "63",
+		                name: "北京天地源有限公司",
+		                color: "#DD4B39",
+		                items: [{
+			                    rate: "53",
+			                    name: "马文义",
+			                    color: "#F39C12"
+            			},{
+			                    rate: "47",
+			                    name: "朱明明",
+			                    color: "#F39C12"
+            			}]
+		           	}]
+		        }];
+		        
+		     return data;
+		  }
+
+
+			function createData3(){
+		  	 var data = [{
+		  	  		rate: "",
+		            name: "恒通科技有限公司",
+		            color: "#00C0EF",
+		  	 		items: [{
+					            rate: "46",
+					            name: "恒通研究院",
+					            color: "#DD4B39",
+					            items: [{
+					                rate: "41",
+					                name: "上海恒通研究院",
+					                color: "#DD4B39",
+					                items: [{
+					                    rate: "91",
+					                    name: "李勇",
+					                    color: "#F39C12"
+					                	},{
+					                    rate: "9",
+					                    name: "祁宏",
+					                    color: "#F39C12"
+					                	}]
+						            }, {
+						                rate: "59",
+						                name: "北京恒通有限公司",
+						                color: "#DD4B39",
+						                items: [{
+							                    rate: "55",
+							                    name: "姚明",
+							                    color: "#F39C12"
+			                			},{
+							                    rate: "45",
+							                    name: "谢正逢",
+							                    color: "#F39C12"
+			                			}]
+			            		}]
+		           	},{
+		           		rate: "54",
+		                name: "北京三通有限公司",
+		                color: "#DD4B39",
+		                items: [{
+			                    rate: "69",
+			                    name: "康利利",
+			                    color: "#F39C12"
+            			},{
+			                    rate: "31",
+			                    name: "彭三明",
+			                    color: "#F39C12"
+            			}]
+		           	}]
+		        }];
+		        
+		     return data;
+		  }
+
+		function getQueryString(){
+		
+		     var result = location.search.match(new RegExp("[\?\&][^\?\&]+=[^\?\&]+","g")); 
+		     if(result == null){
+		
+		         return "";
+		
+		     }
+		     for(var i = 0; i < result.length; i++){
+		
+		         result[i] = result[i].substring(1);
+		
+		     }
+		     return result;
+		
+		}
+
+
+
+		  function createDiagram() {
+		  	
+		  	var x = getQueryString();
+		  	
+		  	var data = createData1();
+		  	
+		  	if( x.length>0 && x[0]=="companycode=C1")
+		  		data = createData1();
+		  	if( x.length>0 && x[0]=="companycode=C2")
+		  		data = createData2();
+		  	if( x.length>0 && x[0]=="companycode=C3")
+		  		data = createData3();
+		  	
+		  	
+		        
+            $("#diagram").kendoDiagram({
+                dataSource: new kendo.data.HierarchicalDataSource({
+                    data: data,
+                    schema: {
+                        model: {
+                            children: "items"
+                        }
+                    }
+                }),
+                layout: {
+                	type: "tree",
+                    subtype: "tipover",
+                    tipOverTreeStartLevel: 1
+
+                 
+                },
+                shapeDefaults: {
+                    visual: visualTemplate
+                },
+               
+                editable: {
+                	drag:false,
+                	resize:false,
+				},
+
+                connectionDefaults: {
+                    stroke: {
+                        color: "#979797",
+                        width: 1
+                    },
+                    startCap: {
+				      type: "none",
+				      fill:{
+				      	color:"#979797"
+				      },
+				      stroke: {
+				        color: "white",
+				        width: 0
+				      }
+				    }
+                }
+            });
+
+            var diagram = $("#diagram").getKendoDiagram();
+            diagram.bringIntoView(diagram.shapes);
+        }
+
+		 
+
+		  function registerEvent(){
+		  	//$("#Refresh").on('click', refreshPage);
+		//	$("#Close").on('click', closePage);
+		 }
+		 
+
+		 $(document).ready(function() {
+                    setTimeout(function() {
+						createDiagram();
+                        //createReportJson();
+                        registerEvent();
+                    }, 400);
+			});
+		 </script>
+	</body>
+</html>

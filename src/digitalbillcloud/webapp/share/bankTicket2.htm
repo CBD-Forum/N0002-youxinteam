@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/qkl.js"></script>
+		<link href="../styles/kendo.common.min.css" rel="stylesheet">
+    	<link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+    	<link href="../styles/BA.Common.css" rel="stylesheet">	
+    	<script src="../js/layer.js"></script>
+		<style>
+			
+			.Clear{
+				clear: both;
+			}
+			.r1-1{
+				float: left;
+				width: 200px;
+				border: solid 1px brown;
+				height: 100px;
+			}
+			.r1-2{
+				float: left;
+				width: 50px;
+				border: solid 1px brown;
+				height: 100px;
+			}
+			.r1-3{
+				float: left;
+				width: 200px;
+				border: solid 1px brown;
+				height: 100px;
+			}
+			.r2-1{
+				float: left;
+				margin-top: 0px;
+				width: 200px;
+				border: solid 1px brown;
+				height: 50px;
+			}
+			.r2-1-1{
+				float: left;
+			
+				width: 80px;
+				border: solid 1px brown;
+				height: 50px;
+			}
+			.r2-1-2{
+				float: left;
+				
+				width: 80px;
+				border: solid 1px brown;
+				height: 50px;
+			}
+			.r3-1{
+				float: left;
+				
+				margin-left: 0px;
+				width: 200px;
+				border: solid 1px brown;
+				height: 100px;
+			}
+			.r3-2{
+				float: left;
+				width: 50px;
+				border: solid 1px brown;
+				height: 100px;
+			}
+			.r3-3{
+				float: left;
+				width: 200px;
+				border: solid 1px brown;
+				height: 100px;
+			}
+			
+			.r4-1{
+				float: left;
+				margin-left: 0px;
+				width: 200px;
+				border: solid 1px brown;
+				height: 100px;
+			}
+			td{
+			
+				border-right:1px solid #F2F2F2; 
+				border-bottom:1px solid #F2F2F2;
+			}
+			.theader{
+					padding-left: 10px;
+			}
+			
+			.xtable-1{
+				width: 100%;
+				height: 120px;
+			    border: #F2F2F2 solid 0px;
+			}
+			.xtable-2{
+				width: 100%;
+				height: 80px;
+				 border: #F2F2F2 solid 0px;
+			}
+			.xtable-3{
+				width: 100%;
+				height: 80px;
+				 border: #F2F2F2 solid 0px;
+			}
+			.xtable-4{
+				width: 100%;
+				height: 50px;
+				 border: #F2F2F2 solid 0px;
+			}
+			.xtable-5{
+				width: 100%;
+				height: 150px;
+				 border: #F2F2F2 solid 0px;
+			}
+			input{
+				border: 0px;
+				height: 90%;
+				width: 100%;
+				font-size: 1em;
+				color: #4f4f4f
+			}
+			.xCenter{
+				text-align: center;
+			}
+			body{
+				background: #F0F0F0;
+				color: #5f5f5f;
+			}
+			
+			#m1{
+				text-align: center;
+			}
+			#m2{
+				text-align: center;
+			}
+			#m3{
+				text-align: center;
+			}
+			#m4{
+				text-align: center;
+			}
+			#m5{
+				text-align: center;
+			}
+			#m6{
+				text-align: center;
+			}
+			#m7{
+				text-align: center;
+			}
+			#m8{
+				text-align: center;
+			}
+			#m9{
+				text-align: center;
+			}
+			#m10{
+				text-align: center;
+			}
+			#m11{
+				text-align: center;
+			}
+			
+			.signRegion{
+				text-align: center;
+				color: dimgrey;
+			}
+			#toolbar{
+				margin-right: 40px;
+			}
+			
+			#txtUser2{
+				width: 100%;
+				height: 37px;
+			}
+			#btnSelectUser2{
+				width:  36px;
+				height: 36px;
+				cursor:  pointer;
+			}
+			
+			.signRegion1{
+				text-align: center;
+				color: transparent;
+				background-image: url("../images/redz.png");
+				height: 160px;
+				line-height: 160px;
+				background-repeat:no-repeat; 
+				background-position:60px 0px;
+			}
+			
+		</style>
+		
+		<script>
+		function showChineseMoney(){
+			
+			var x11 = $("#m11").val()*100000000;
+			var x10 = $("#m10").val()*10000000;
+			var x9 = $("#m9").val()*1000000;
+			var x8 = $("#m8").val()*100000;
+			var x7 = $("#m7").val()*10000;
+			var x6 = $("#m6").val()*1000;
+			var x5 = $("#m5").val()*100;
+			var x4 = $("#m4").val()*10;
+			var x3 = $("#m3").val()*1;
+			var x2 = $("#m2").val()*0.1;
+			var x1 = $("#m1").val()*0.01;
+			
+			var x = x11+x10+x9+x8+x7+x6+x5+x4+x3+x2+x1;
+			
+			
+			
+			$("#money").val(Arabia_to_Chinese("￥"+x));
+		}
+		 function replaceNotNumber(hehe)
+		 {
+		 	
+		 	if( hehe.value.length>1)
+		 	{
+		 		hehe.value = hehe.value.substr(0,1);
+		 		showChineseMoney();
+		 		return;
+		 	}
+		 	
+		   var pattern = /[^0-9]/g;
+		   if(pattern.test(hehe.value))
+		   {
+		     hehe.value = hehe.value.replace(pattern,"");
+		    
+		   }
+		   
+		    showChineseMoney();
+		 }
+		 </script>
+	</head>
+	<body>
+		
+		
+		<div id="reportTop" style="height:42px;width:100%;border-bottom:1px solid #E5E5E5; background: white;margin-bottom: 20px;">
+	        <div id="logo">
+	            	票据签发 
+	        </div>
+		    <div id="toolbar">
+			        <div id="reportMainMenu">
+			        	<button id="resignbill" class="k-button" style="width: 100px; ">再次签发</button>
+			        	
+			        	<button id="signbill" class="k-button" style="width: 60px;">签发</button>
+			        	<button id="close" class="k-button" style="width: 60px;">关闭</button>
+			        </div>
+		    </div>
+	  	</div>
+   
+		
+		
+		<div style="margin-left:auto;margin-right:auto;width: 954px;border: #F5F5F5 0px solid; background: white;">
+			<div style="text-align: center; height: 50px; line-height:50px;font-size: 24px;">银行承兑票据</div>
+			<div style="height: 50px;line-height: 50px;">
+				<table width="100%;">
+					<tr><td style="border: 0px;  padding-left: 10px;">票据编号 <input type="text" style="width: 200px;height: 25px;" id="txtBillNo" readonly/><input type="hidden" id="txtContractAddress"/></td><td style="border: 0px; text-align: right;padding-right: 10px;">出票日期 <input type="text" style="width: 200px;height: 25px;" id="txtBillDate"/></td></tr>
+				</table>
+			</div>
+			
+			
+		</div>
+		<div style="margin-left:auto;margin-right:auto;width: 955px;border: #F5F5F5 1px solid;border-right-width: 0px; border-bottom-width: 0px; background: white;">
+			
+			
+			<div>
+				<table class="xtable-1" cellpadding="0" cellspacing="0">
+					
+					<tr><td class="theader" width="100px">出票人全称</td>
+						<td width="350px" style="padding-left: 10px;"><input type="text" id="txtUser1" readonly/><input type="hidden" id="txtFromCompanyId"></td>
+						<td width="40px" rowspan="3"><div style="line-height: 20px;height: 60px;margin: 0 auto;width: 20px;">收款人</div></td>
+						<td class="theader" width="60px">全称</td>
+						<td height="39px"><table cellpadding="0" cellspacing="0" width="100%" height="37px"><tr><td style="width: calc(100% - 40px);border: 0px;padding-left: 10px;"><input type="text" id="txtUser2" readonly/><input type="hidden" id="txtToCompanyId"></td><td style="width: 40px; border: 0px;"><img  id="btnSelectUser2" src="../images/btn_query.png"></img></td></tr></table></td>
+					</tr>
+					
+				
+					
+					<tr><td class="theader">出票人账号</td><td style="padding-left: 10px;"><input type="text" id="txtUser1Account" readonly/></td><td class="theader">账号</td><td style="padding-left: 10px;"><input type="text" id="txtUser2Account" readonly/></td></tr>
+					<tr><td class="theader">付款行全称</td><td style="padding-left: 10px;"><input type="text" id="txtUser1Bank" readonly/></td><td class="theader">开户行</td><td style="padding-left: 10px;"><input type="text" id="txtUser2Bank" readonly/></td></tr>
+					
+					
+				</table>
+			</div>
+			
+			<div>
+				<table class="xtable-2"  cellpadding="0" cellspacing="0">
+					<tr>
+						<td rowspan="2" class="theader" width="100px">出票金额</td><td rowspan="2" width="350px" style="padding-left: 10px;"><input type="text" id="money" readonly/></td><td width="40px" rowspan="2"><div style="line-height: 20px;height: 60px;margin: 0 auto;width: 20px;">人民币</div></td><td class="xCenter">亿</td><td class="xCenter">千</td><td class="xCenter">百</td><td class="xCenter">十</td><td class="xCenter">万</td><td class="xCenter">千</td><td class="xCenter">百</td><td class="xCenter">十</td><td class="xCenter">元</td><td class="xCenter">角</td><td class="xCenter">分</td>
+					</tr>
+					<tr>
+						<td><input type="text" id="m11" onpropertychange="replaceNotNumber(this)" oninput="replaceNotNumber(this)" /></td>
+						<td><input type="text" id="m10" onpropertychange="replaceNotNumber(this)" oninput="replaceNotNumber(this)" /></td>
+						<td><input type="text" id="m9" onpropertychange="replaceNotNumber(this)" oninput="replaceNotNumber(this)" /></td>
+						<td><input type="text" id="m8" onpropertychange="replaceNotNumber(this)" oninput="replaceNotNumber(this)" /></td>
+						<td><input type="text" id="m7" onpropertychange="replaceNotNumber(this)" oninput="replaceNotNumber(this)" /></td>
+						<td><input type="text" id="m6" onpropertychange="replaceNotNumber(this)" oninput="replaceNotNumber(this)" /></td>
+						<td><input type="text" id="m5" onpropertychange="replaceNotNumber(this)" oninput="replaceNotNumber(this)" /></td>
+						<td><input type="text" id="m4" onpropertychange="replaceNotNumber(this)" oninput="replaceNotNumber(this)" /></td>
+						<td><input type="text" id="m3" onpropertychange="replaceNotNumber(this)" oninput="replaceNotNumber(this)" /></td>
+						<td><input type="text" id="m2" onpropertychange="replaceNotNumber(this)" oninput="replaceNotNumber(this)" /></td>
+						<td><input type="text" id="m1" onpropertychange="replaceNotNumber(this)" oninput="replaceNotNumber(this)" /></td>
+					</tr>
+				</table>
+			</div>
+			
+			<div>
+				<table class="xtable-3" cellpadding="0" cellspacing="0">
+					<tr><td width="100px" class="theader">到期日</td><td width="350px" style="padding-left: 10px;"><input type="text" id="txtAcceptDate"/></td><td rowspan="2" width="40px"><div style="line-height: 20px;height: 60px;margin: 0 auto;width: 20px;">付款行</div></td><td width="60px" class="theader">行号</td><td style="padding-left: 10px;"><input type="text" id="txtUser3" readonly/></td></tr>
+					<tr><td class="theader">承兑协议</td><td style="padding-left: 10px;"><input type="text" id="txtProtocols" readonly/></td><td class="theader">地址</td><td style="padding-left: 10px;"><input type="text" id="txtUser3Address" readonly/></td></tr>
+					
+				</table>
+			</div>
+			
+		
+			
+			<div>
+				<table class="xtable-5" cellpadding="0" cellspacing="0">
+					<tr><td width="285px" ><div class="signRegion" id="divRedCap">出票人签章区</div></td>
+					<td width="287px"><div class="signRegion">承兑行签章区</div></td>
+					<td><div class="signRegion">收款人签章区</div></td></tr>
+				</table>
+			</div>
+		
+		</div>
+		
+		<!--
+        	作者：offline
+        	时间：2017-03-24
+        	描述：
+       
+		<div>
+			<div>
+				<div class="r1-1">
+					<div>出票人全称</div>
+					<div>出票人账号</div>
+					<div>付款行全称</div>
+				</div>
+				<div class="r1-2">收款人</div>
+				<div class="r1-3">
+					<div>全称</div>
+					<div>账号</div>
+					<div>开户行</div>
+				</div>
+			</div>
+		   <div class="Clear"></div>
+			<div class="r2-1">
+				<div class="r2-1-1">出票金额</div>
+				<div class="r2-1-2">人民币大写</div>
+			</div>
+		<div>
+			 -->
+	</body>
+	
+	<script>
+		function onlyNumber(event){ 
+	    	var keyCode = event.keyCode; 
+	    	if(keyCode==13){ 
+	    		
+ 				gotoNext($(this).attr("id"));
+	    	} 
+		} 
+		function gotoNext(m){
+			if(m=="m11")
+				$("#m10").focus();
+			if(m=="m10")
+				$("#m9").focus();
+			if(m=="m9")
+				$("#m8").focus();
+			if(m=="m8")
+				$("#m7").focus();
+			if(m=="m7")
+				$("#m6").focus();
+			if(m=="m6")
+				$("#m5").focus();
+			if(m=="m5")
+				$("#m4").focus();
+			if(m=="m4")
+				$("#m3").focus();
+			if(m=="m3")
+				$("#m2").focus();
+			if(m=="m2")
+				$("#m1").focus();
+		}
+		function newSignBill(){
+			window.location.reload();
+		}
+		
+		function bill(a,b,c,d,e,f,g,h,i,j,k,y,z) {
+				this.Id = a,
+				this.ReceiptNo = b;
+				this.BillDate = c;
+				this.CreateUserId = d;
+				this.FromCompanyId = e,
+				this.FromBankAccount = f;	
+				this.ToCompanyId = g;	
+				this.ToBankAccount = h;	
+				this.AcceptDate = i;
+				this.AcceptBankNO = j;
+				this.Protocols = k;
+				this.ContractAddress = y;	
+				this.Amount = z;	
+		}
+		
+		function saveBill(){
+				var a = "";
+     			var b = $("#txtBillNo").val();
+     			var c = $("#txtBillDate").val();
+     			var d = "";
+     			var e = $("#txtFromCompanyId").val();
+     			var f = $("#txtUser1Account").val();
+     			var g = $("#txtToCompanyId").val();
+     			var h = $("#txtUser2Account").val();
+     			var i = $("#txtAcceptDate").val();
+     			var j = $("#txtUser3").val();
+     			var k = $("#txtProtocols").val();
+     			var y = $("#txtContractAddress").val();
+     			
+     			var m =0;
+     			
+     			for(var x=11;x>0;x--){
+     				if( $("#m"+x).val()!=""){
+     					m = x;
+     					break;
+     				}
+     			}
+     			
+     			for(var x=m;x>0;x--){
+     				if( $("#m"+x).val()==""){
+     					$("#m"+x).val("0")
+     				}
+     			}
+
+     			var z = $("#m11").val()+$("#m10").val()+$("#m9").val()+$("#m8").val()+$("#m7").val()+$("#m6").val()+$("#m5").val()+$("#m4").val()+$("#m3").val()+'.'+$("#m2").val()+$("#m1").val();
+     			if(z=='.')
+     				z = '';
+     			
+     			
+     			if(h==""){
+     				layer.msg("请选择收款人");
+     				return;	
+     			}
+     			
+     			if(z==""){
+     				layer.msg("请输入签发金额");
+     				return;	
+     			}
+     			
+     		
+     			
+     			var u = new bill(a,b,c,d,e,f,g,h,i,j,k,y,z);
+     			
+     			
+     			var postData = JSON.stringify(u);
+				$.ajax({
+									type: "post",
+									dataType: "json",
+									contentType: "application/json; charset=utf-8",
+									cache: false,
+									async: true,
+									url: getWebApiAuthURI() + "/SaveBankReceipt/?token="+getUserToken(),
+									data:postData,
+									success: function(data) {
+										if(data.Result){
+											layer.msg("票据签发成功");
+											$("#signbill").hide();
+											$("#resignbill").show();
+										    $("#divRedCap").removeClass("signRegion");
+											$("#divRedCap").addClass("signRegion1");
+										}
+										else{
+											layer.msg("票据签发失败,原因:"+data.Message);
+										}
+									},
+									error: function(XMLHttpRequest, textStatus, errorThrown) {
+										alert(errorThrown);
+									}
+     					});
+		}
+		
+		function createNewBankTicket() {
+		
+			$.ajax({ 
+           			type: "Get",
+                	dataType: "json",
+                	contentType: "application/json; charset=utf-8",
+			    	cache: false,
+			    	async: true,
+					
+			    	url: getWebApiAuthURI()+"/GetNextBankReceipt/?token="+getUserToken(),             
+                	success: function (data) { 	
+                		
+                			
+							initBankTicket(data);
+							
+							
+                	}, 
+                	error: function (XMLHttpRequest, textStatus, errorThrown) { 
+                        alert(errorThrown); 
+                	} 
+           	});					
+        }
+		
+		function selectToUser(){
+			  layer.open({
+							  type: 2,
+							  shift:5,
+							  title:"选择收款企业",
+							  shade: [0.6, '#393D49'],
+							  shadeClose: true, //开启遮罩关闭
+							  area: ['800px', '600px'], //宽高
+							  content: "companyList.htm",
+							  end:function(){ 
+										
+									$("#txtToCompanyId").val(window.localStorage.getItem("ToCompanyId"));
+									$("#txtUser2").val(window.localStorage.getItem("ToCompanyName"));		  	
+									$("#txtUser2Account").val(window.localStorage.getItem("ToBankAccount"));		  	
+									$("#txtUser2Bank").val(window.localStorage.getItem("ToBankName"));		  	
+							  },							  
+						});
+		}
+		
+
+		function initBankTicket(bt){ 
+		
+		    var time1 = new Date().Format("yyyy-MM-dd");
+		    var time2 = (new Date()).dateAdd('m',3).Format("yyyy-MM-dd");
+		    
+		
+		
+		 	$("#m11").keydown(onlyNumber); 
+		   	$("#m10").keydown(onlyNumber); 
+		    $("#m9").keydown(onlyNumber); 
+		    $("#m8").keydown(onlyNumber); 
+		    $("#m7").keydown(onlyNumber); 
+		    $("#m6").keydown(onlyNumber); 
+		    $("#m5").keydown(onlyNumber); 
+		    $("#m4").keydown(onlyNumber); 
+		    $("#m3").keydown(onlyNumber); 
+		    $("#m2").keydown(onlyNumber); 
+		    $("#m1").keydown(onlyNumber); 
+		    
+		    
+		    $("#txtContractAddress").val(bt.ContractAddress);
+		    $("#txtBillNo").val(bt.ReceiptNo);
+		    $("#txtBillDate").val(time1);
+		      
+		    $("#txtFromCompanyId").val(bt.FromCompanyId); 
+		    $("#txtUser1").val(bt.FromCompanyName);
+		    $("#txtUser1Account").val(bt.FromBankAccount);
+		    $("#txtUser1Bank").val(bt.AcceptBankName);
+		   // $("#txtUser2").val("北京上游供应商品XYZ");
+		   // $("#txtUser2Account").val("6223 0000 3339 0017");
+		   // $("#txtUser2Bank").val("农业银行海淀分行");
+		   // $("#money").val("叁佰肆拾壹万元整");
+		   // $("#m9").val("3");
+		   // $("#m8").val("4");
+		   // $("#m7").val("1");
+		   // $("#m6").val("0");
+		   // $("#m5").val("0");
+		   // $("#m4").val("0");
+		   // $("#m3").val("0");
+		   // $("#m2").val("0");
+		   // $("#m1").val("0");
+		    
+		    $("#txtAcceptDate").val(time2);
+		    $("#txtProtocols").val(bt.Protocols);
+		    
+		    $("#txtUser3").val(bt.AcceptBankNo);
+		    $("#txtUser3Address").val(bt.AcceptBankAddress);
+		    
+		    $("#btnSelectUser2").on('click', selectToUser);
+		    
+		    $("#signbill").on('click', saveBill);
+		    $("#resignbill").on('click', newSignBill);
+		    $("#close").on('click', closePage);
+		    
+		};
+		 function closePage(){
+		 		var m = new Array();
+				m[0] = "CloseDocument";
+				m[1] = "2ad2eaa6_a892_4ccb_9c83_07ffde1bb78e";
+				
+				window.parent.postMessage(m,'*');
+		 }
+		
+ 		$(document).ready(function() {
+                    setTimeout(function() {
+						$("#resignbill").hide();
+                        createNewBankTicket();
+                    }, 400);
+			});
+	</script>
+</html>

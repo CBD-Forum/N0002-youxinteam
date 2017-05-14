@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>即席查询</title>
+  	   	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    	<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=yes">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+    	<script src="../js/jquery.min.js"></script>
+   		<script src="../js/kendo.all.min.js"></script>
+		<script src="../js/mergeGrid.js"></script>
+    	<script src="../js/common.js"></script>
+    	<script src="../js/reportlayout.js"></script>
+		<script src="../js/layer.js"></script>
+		<script src="../js/jqPaginator.js" type="text/javascript" ></script>
+		<script src="../js/ba.filter.js"></script>
+		<script src="../js/messages/kendo.messages.zh-CN.min.js"></script>
+    	<script src="../js/cultures/kendo.culture.zh-CN.min.js"></script>
+		<script src="../js/guid.js"></script>
+		<script src="../js/jquery.flexdatalist.js"></script>
+			
+		<link href="../styles/kendo.common.min.css" rel="stylesheet">
+    	<link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+    	<link href="../styles/BA.Common.css" rel="stylesheet">	
+		<link href="../styles/ba.kendo.ui.css" rel="stylesheet">
+    	<link href="../styles/ba.filter.css" rel="stylesheet">
+		<link href="../styles/ba.pager.css" rel="stylesheet">
+		<link href="../styles/jquery.flexdatalist.css" rel="stylesheet">
+		<style>
+			body{
+				height: 100%;
+				overflow: hidden;
+				background: #EEEEEE;
+				margin: 0;
+			}
+			#main{
+				margin-left: 30px;
+				margin-right: 30px;
+				background: white;
+				height: 100%;
+			}
+			#left{
+				width: 250px;
+				border-right: #EEEEEE solid 1px;
+				height: 100%;
+				float: left;
+			}
+			
+			#result{
+				margin-left: 260px;
+				margin-right: 10px;
+				height: 100%;
+				
+			}
+	
+            .fieldlist {
+                margin: 0 0 -2em;
+                padding: 10px;
+            }
+
+            .fieldlist li {
+                list-style: none;
+                padding-bottom: 2em;
+            }
+
+            .fieldlist label {
+                display: block;
+                padding-bottom: 1em;
+                font-weight: bold;
+                text-transform: uppercase;
+                font-size: 12px;
+                color: #444;
+            }
+			
+			.k-autocomplete, .k-dropdown-wrap, .k-numeric-wrap, .k-picker-wrap, .k-textbox {
+				border-top-width: 1px;
+				border-right-width: 1px;
+				border-left-width: 1px;
+				border-bottom-width: 1px;
+				border-radius:0px;
+			}
+		</style>
+	</head>
+	<body>
+		<div style="height: 60px; background: white;margin-left: 30px;margin-right: 30px; border-bottom: #EEEEEE solid 1px;">
+			<div style="margin-left: 10px;padding-top: 15px;">
+				<input  type="text" class="k-textbox" style="width: 600px;" placeholder="问我关于数据的问题" id='txtKeyword'/>
+				
+				
+				<button id="btnSearch" class="k-button" style="width:90px;margin-left: 10px;background: #23A497;color: white;">搜素</button>
+			</div>
+			
+		
+		</div>
+		<div id="main">
+			<div id="left">
+				<ul class="fieldlist">
+	            <li>
+	                <label for="txtDimension">分析角度</label>
+	                <input id="txtDimension" type="text" class="k-textbox" style="width: 100%;" />
+	            </li>
+	            <li>
+	                <label for="txtMeasure">分析指标</label>
+	                <input id="txtMeasure" class="k-textbox" style="width: 100%;" ></input>
+	            </li>
+	            <li>
+	                <label for="txtFilter">分析范围</label>
+	                <textarea id="txtFilter" class="k-textbox" style="width: 100%; height: 100px;" ></textarea>
+	            </li>
+	            
+	            <li>
+	                <label for="txtAnalytic">分析方法</label>
+	                <input id="txtAnalytic" class="k-textbox" style="width: 100%;" ></input>
+	            </li>
+	           </ul>
+			</div>
+			
+			
+			<div id = "result">
+				    <div id="reportTop" style="height:42px;width:100%;border-bottom:1px solid #E5E5E5;">
+				        <div id="toolbar">
+					        <div id="reportMainMenu">
+					        	<button id="SaveReport" class="k-button">存为报表</button>
+					        	<button id="InsertToDashboard" class="k-button">添加到驾驶舱</button>
+					        	<button id="Property" class="k-button" style="width: 60px;">属性</button>
+					        </div> 
+				        </div>
+				   </div>
+				<div id = "reportContent" ></div>
+			</div>
+		</div>
+		
+		<script>
+		var guid = new GUID();
+		var queryId = guid.newGUID();
+		
+		
+		
+		$("#btnSearch").on('click', query);	
+		
+		function query(){
+			var k = $("#txtKeyword").val();
+			k = window.encodeURIComponent(k);
+			
+			$.ajax({
+							type: "get",
+							dataType: "json",
+							cache: false,
+							async: true,
+							url: getWebApiURI() + "/AdhocQuery/?token="+getUserToken()+"&queryId="+queryId+"&keyword="+k,
+							success: function(data) {
+								    $("#reportContent").empty();
+									$(data.ContentHtml).appendTo($("#reportContent"));
+									updateAdhocLayout();
+									loadLeft(data);
+									loadReport();
+							}
+				   });
+		}
+		
+		function loadLeft(data){
+			var d="",m="",f="",a="";
+			for(var i=0;i<data.Dimensions.length;i++)
+			{
+				if( d=="")
+					d = data.Dimensions[i].Name;
+				else
+					d = d+";"+data.Dimensions[i].Name;
+			}
+			$("#txtDimension").val(d);
+			
+			for(var i=0;i<data.Measures.length;i++)
+			{
+				if( m=="")
+					m= data.Measures[i].Name;
+				else
+					m = m+";"+data.Measures[i].Name;
+			}
+			$("#txtMeasure").val(m);
+			
+			$("#txtAnalytic").val(data.BlockType);
+			
+		}
+		
+		function updateAdhocLayout(){
+			
+			var w = $("#reportContent").width();
+			var h = $("#reportContent").height();
+		    var ch = $(window).height();    
+			var h = ch-60-42;
+			
+			$("div[data-block*='block']").each(
+		       function(){
+		       	   var block = $(this).data("block");
+		       	   if( block=="blockTable")
+		       	   		h = h-36;
+		       	  
+		       	   	$(this).width(w);
+           			$(this).height(h-10);
+           			
+           			$(this).css("marginLeft","0px");
+           			$(this).css("marginTop","0px");
+            
+		    });
+		}
+		
+		
+			window.addEventListener('message',function(e){
+	    			var m = e.data;
+	    		
+	    			if( m[0]=="adhocQuery"){
+	    				$("#txtKeyword").val(m[1]);
+	    				query();
+	    			}
+	         	},false);
+	         	
+	       //	$('#txtKeyword').flexdatalist();	
+		</script>
+	
+	</body>
+</html>

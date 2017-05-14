@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    	<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=yes">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+       	<script src="../js/jquery.min.js"></script>
+       	<script src="../js/qkl.js"></script>
+   		<script src="../js/kendo.all.min.js"></script>
+
+    	<script src="../js/common.js"></script>
+
+		<script src="../js/layer.js"></script>
+
+
+		<script src="../js/messages/kendo.messages.zh-CN.min.js"></script>
+    	<script src="../js/cultures/kendo.culture.zh-CN.min.js"></script>
+		<link href="../styles/bootstrap.min.css" type="text/css" rel="stylesheet" />
+		<link href="../styles/kendo.common.min.css" rel="stylesheet">
+    	<link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+
+    	<link href="../styles/BA.Common.css" rel="stylesheet">	
+		<link href="../styles/ba.kendo.ui.css" rel="stylesheet">
+		<style>
+			#sessionGrid{
+				height: calc(100% - 147px);
+			}
+			
+
+		</style>
+	</head>
+	<body>
+		<div id="reportTop" style="height:47px;width:100%;border-bottom:0px solid lightgray;">
+	        <div id="logo">
+	            	我签发的票据
+	        </div>
+	        <div id="toolbar">
+		        <div id="reportMainMenu">
+		        	<button id="clearbill" class="k-button" style="width: 60px;">清算</button>
+		        	
+		        	<button id="Close" class="k-button" style="width: 60px;">关闭</button>
+		        </div>
+	        </div>
+   		</div>
+		<div>
+			<div id="sessionGrid"></div>
+		</div>
+		<script>
+		function createReportJson() {
+		
+			$.ajax({ 
+           			type: "Get",
+                	dataType: "json",
+                	contentType: "application/json; charset=utf-8",
+			    	cache: false,
+			    	async: true,
+					
+			    	url: getWebApiAuthURI()+"/GetBankReceiptList/?token="+getUserToken(),      
+                	success: function (data) { 	
+                		
+                			var h = $(window).height();
+                			$("#sessionGrid").empty();
+							createGrid(data,h-50);
+							
+							
+                	}, 
+                	error: function (XMLHttpRequest, textStatus, errorThrown) { 
+                        alert(errorThrown); 
+                	} 
+           	});					
+        }
+		
+		 function createGrid(rows,h) {
+            $("#sessionGrid").kendoGrid({
+                dataSource:{
+                    data: rows
+                },
+         		height:h,
+         		
+                groupable:  false,
+                sortable:  	true,
+                scrollable:	true,
+                filterable: true,
+                columnMenu: true,
+                columns: [{
+                	field: "IsSelected",
+                	filterable: false,
+                	sortable:  	false,
+                	editable:   false,
+                	columnMenu: false,
+                    width: 50,
+                    title: "选择",
+                    template: "<input type='checkbox' class='checkbox' id='#= Id #'  #= IsSelected ? 'checked' : '' #/>"
+                }, {
+                    field: "ReceiptNo",
+                    title: "票据号 ",
+                    width: 100,
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                },{
+                	field: "ToCompanyName",
+                    title: "收款人",
+                    width: 100,
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                },{
+                    field: "Amount",
+                    title: "金额 ",
+                    width: 80,
+                    attributes: {
+      						"class": "table-cell",
+     						 style: "text-align: right; "
+    						},
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                }, {
+                    field: "BillDate",
+                    title: "出票日期",
+                    width: 100,
+                    type: 'date',
+                    template: '#= kendo.toString(BillDate, "yyyy-MM-dd") #',
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                }, 
+                {
+                    field: "AcceptDate",
+                    title: "到期日",
+                    type: 'date',
+                    template: '#= kendo.toString(AcceptDate, "yyyy-MM-dd") #',
+                    width: 100,
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                }, {
+                    field: "ContractAddress",
+                    title: "区块链浏览器",
+                    width: 120,
+                     attributes: {
+      						"class": "table-cell",
+     						 style: "text-align: center; "
+    						},
+                    template: "<a href='openContract.htm?contract_id=#= ContractAddress #' target='_blank'>查看合约</a>",
+                   
+                    headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    }
+                   
+                },
+                 { command: { text: "查看票据", click: showDetails }, title: "查看", width: "100px",headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    } ,
+                 attributes:{style:"text-align: center"}},
+                 { command: { text: "票据链", click: showTicketChain }, title: "票据链", width: "100px",headerAttributes:{
+                    	style:"text-align: center;font-size:1.1em"
+                    } ,
+                 attributes:{style:"text-align: center"}}
+                 ],
+                theme:      "bootstrap"
+            });
+        }
+		 
+		  function showDetails(e){
+		 	  e.preventDefault();
+              var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+              var rid = dataItem.Id;
+             
+              layer.open({
+							  type: 2,
+							  title:"查看票据",
+							  area: ['960px', '600px'], //宽高
+							  content: "viewBankTicket.htm?rid="+rid+"&raw=true"
+							  
+						});
+		 }
+		 
+		  function showTicketChain(e){
+		 	  e.preventDefault();
+              var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+              var rid = dataItem.Id;
+            
+              var rno = dataItem.ReceiptNo;
+              var d =  dataItem.AcceptDate;
+              var cd = d.Format("yyyy-MM-dd");
+             
+               layer.open({
+							  type: 2,
+							  title:"查看票据链 (票据号:"+rno+" 到期日:"+cd+")",
+							  area: ['960px', '600px'], //宽高
+							  content: "viewTicketChain.htm?rid="+rid
+							  
+						});
+             
+		 }
+		  
+		  function registerEvent(){
+		  	$("#clearbill").on('click', clearbill);
+			$("#Close").on('click', closePage);
+		 }
+		 
+		 function clearbill(){	
+		 	alert("清算完成");
+		 }
+		 
+		  function closePage(){
+		 		var m = new Array();
+				m[0] = "CloseDocument";
+				m[1] = "42d2eaa6_a892_4ccb_9c83_07ffde1bb78e";
+	
+				window.parent.postMessage(m,'*');
+		 }
+		 
+		 $(document).ready(function() {
+                    setTimeout(function() {
+						kendo.culture("zh-CN");
+                        createReportJson();
+                        registerEvent();
+                    }, 400);
+			});
+		 </script>
+	</body>
+</html>

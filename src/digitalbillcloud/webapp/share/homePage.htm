@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    	<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=yes">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+    	<script src="../js/jquery.min.js"></script>
+    	<script src="../js/kendo.all.min.js"></script>
+    	<script src="../js/common.js"></script>
+    	<script src="../js/reportlayout.js"></script>
+		<script src="../js/layer.js"></script>
+
+		<link href="../styles/kendo.common.min.css" rel="stylesheet">
+		<link href="../styles/kendo.bootstrap.min.css" rel="stylesheet">
+		
+		<style>
+		html{height: 100%;}
+		body{height: 100%; margin: 0px; }
+			.left{ float:left; width:40px; background:#EEEEEE; height: 100%; }
+			.right{ float:right; width:40px; background:#EEEEEE;height: 100%; }
+			.center{ margin:0 40px;height: 100%; background:#EEEEEE;}
+			
+			#region1{
+				float:left;width:32%; border: #EEEEEE solid 0px;background: white;
+				height: 100%;
+				
+			}
+			#region2{
+				float:left;width:32%;border: #EEEEEE solid 0px;background: white;
+				height: 100%;
+			}
+			#region3{
+				float:left;width:32%;border: #EEEEEE solid 0px;background: white;
+				height: 100%;
+			}
+			.regionBlank{
+				float:left;
+				width: 2%;
+				background: #EEEEEE;
+				height: 100%;
+			}
+			
+			.metro{
+				float:left;
+				margin-top: 10px;
+				margin-right: 2%;
+				width: 15%;
+				height: 90px;
+				background: white;
+				
+				border: #EEEEEE solid 0px;
+			}
+			.emptyMetro{
+				margin-bottom: 1px;height: 89px; border: 1px solid lightgray;
+				background: #EEEEEE;
+				z-index: 0;
+			}
+			.addMetro{
+				margin-bottom: 1px;height: 89px; border: 1px solid lightgray;
+				background: #E6E6E5;
+				line-height: 89px;
+				text-align: center;
+			}
+			ul li{  
+				list-style-type:none;  
+				margin-top:8px;
+				margin-bottom:8px;
+				margin-left:10px
+			}  
+			ul,li{
+				margin:0;
+				 padding:0;
+			}
+				 
+			#ul1 li:hover {
+				color: #00ABFC;
+				cursor: pointer;
+			}
+			#ul2 li:hover {
+				color: #00ABFC;
+				cursor: pointer;
+			}
+			#ul3 li:hover {
+				color: #00ABFC;
+				cursor: pointer;
+			}
+			
+			.removeDocNormal {
+				cursor: pointer;
+				display: none;
+				float: right;
+				margin-right: 5px;
+			}
+			.imageOK{
+				cursor: pointer;
+				float: right;
+				display: none;
+				margin-right: 15px;
+			}
+			.imageConfig{
+				cursor: pointer;
+				display: none;
+				margin-left: 20px;
+			}
+			.imageMetroOK{
+				cursor: pointer;
+				display: none;
+				margin-left: 20px;
+			}
+			.removeMetro{
+				cursor: pointer;
+				display: none;
+				float: right;
+				margin-right: 2px;
+				margin-top: -112px;
+			}
+			
+			a,img{vertical-align:middle;}
+		</style>
+	</head>
+	<body>
+		
+		<div class="left"></div>
+		<div class="right"></div>
+		<div class="center" id="mainDiv">
+			<div class="blankDiv"></div>
+			<div style="height: 160px; width: 100%;" id="searchRegion">
+				
+        		<div style="height: 160px;">
+        			<div style="text-align: center;height:50%;line-height: 80px; font-size:16px;">问我关于数据的问题</div>
+        			<div style="height:50%; text-align: center;"><input id="txtKeyword" type="text" class="k-textbox" style="width: 450px;" placeholder="" /><button id="homepageSearch" class="k-button" style="width:90px;margin-left: 10px;background: #23A497;color: white;">搜素</button></div>
+        		</div>
+        	</div>
+        	
+			<div style="height: 160px; width: 100%;">
+				<div style="height: 25px; padding-top:5px;padding-left: 0px;font-size: 15px;" id="fMetroList">我关注的指标<img src="../images/config18.png" class="imageConfig"><img src="../images/ok18.png" class="imageMetroOK"></div>
+        		<div>
+        			<div class="metro"><div class="emptyMetro" id="metro1"></div><img src="../images/delete18.png" class="removeMetro" style="z-index: 99;"></div>
+        			<div class="metro"><div class="emptyMetro" id="metro2"></div><img src="../images/delete18.png" class="removeMetro"></div>
+        			<div class="metro"><div class="emptyMetro" id="metro3"></div><img src="../images/delete18.png" class="removeMetro"></div>
+
+        			<div class="metro"><div class="emptyMetro" id="metro4"></div><img src="../images/delete18.png" class="removeMetro"></div>
+        			<div class="metro"><div class="emptyMetro" id="metro5"></div><img src="../images/delete18.png" class="removeMetro"></div>
+        			<div class="metro" style="margin-right: 0px"><div class="emptyMetro"></div><img src="../images/delete18.png" class="removeMetro"></div>
+        		</div>
+        	</div>
+			
+			<div style="height: 250px; width: 100%;">
+				<div id="region1">
+					<div style="height: 25px; background: white;padding-top:13px;padding-left: 10px;font-size: 14px;border-bottom: solid 0px #E5E5E5;" id="fReportList">常用的功能<img src="../images/ok18.png" class="imageOK"></div>
+        			<div style="border-top: 1px solid #EEEEEE;margin-left:10px;margin-right: 10px;">
+        			
+        				<ul id="ul1">
+        					
+        				</ul>
+        				
+        			</div>
+        		</div>
+        		<div class="regionBlank">
+        			
+        		</div>
+        		<div id="region2">
+					<div style="height: 25px; background: white;padding-top:13px;padding-left: 10px;font-size: 14px;border-bottom: solid 0px #E5E5E5;" id="fSimpleReportList">关注的报表<img src="../images/ok18.png" class="imageOK"></div>
+        			<div style="border-top: 1px solid #EEEEEE;margin-left:10px;margin-right: 10px;">
+        				<ul id="ul2">
+        					
+        				</ul>
+        			</div>
+        		</div>
+        		<div class = "regionBlank">
+        			
+        		</div>
+        		<div id="region3">
+					<div style="height: 25px; background:white;padding-top:13px;padding-left: 10px;font-size: 14px;border-bottom: solid 0px #E5E5E5;">访问过的功能</div>
+        			<div style="border-top: 1px solid #EEEEEE;margin-left:10px;margin-right: 10px;">
+        				<ul id="ul3">
+        					
+        				</ul>
+        			</div>
+        		</div>
+        	</div>
+        	
+        	<div class="blankDiv"></div>
+		<div>
+			
+		<script>
+		
+			$(document).ready(function() {
+                    setTimeout(function() {
+                        setLayout();
+                        loadFavoriteMetroList();
+                        loadFavoriteReportList();
+                        loadFavoriteQueryList();
+                        loadHistoryReportList();
+                        registerEvent();
+                    }, 400);
+			});
+			
+		
+			function setLayout(){
+				 var cheight = $(window).height()-250-160-40-160;
+				 
+				 if( cheight>0)
+				 	$(".blankDiv").height(cheight/2);
+			}
+			 	
+		 	function loadFavoriteMetroList(){
+		 		
+			 	$.ajax({
+						type: "get",
+						dataType: "json",
+						cache: false,
+						async: true,
+						url: getWebApiAuthURI() + "/GetFavoriteIndicatorList/?token="+getUserToken(),
+						success: function(data) {
+							createFavoriteMetro( data );
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+				});
+			}
+					
+		 	function loadFavoriteReportList(){
+			 	$.ajax({
+						type: "get",
+						dataType: "json",
+						cache: false,
+						async: true,
+						url: getWebApiURI() + "/GetFavoriteReportList/?token="+getUserToken(),
+						success: function(data) {
+							createReportList("ul1",data,0);
+							registerClick("ul1",false);
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+			}
+					
+			function loadFavoriteQueryList(){	
+				$.ajax({
+						type: "get",
+						dataType: "json",
+						cache: false,
+						async: true,
+						url: getWebApiURI() + "/GetFavoriteQueryList/?token="+getUserToken(),
+						success: function(data) {
+							createReportList("ul2",data,1);
+							registerClick("ul2",true);
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+			}
+			
+			function loadHistoryReportList(){
+				
+				$.ajax({
+						type: "get",
+						dataType: "json",
+						cache: false,
+						async: true,
+						url: getWebApiURI() + "/GetHistoryReportList/?token="+getUserToken(),
+						success: function(data) {
+							createReportList("ul3",data,-1);
+							registerClick("ul3",false);
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+			}
+					
+			function createReportList(name,data,docType){
+				$("#"+name).empty();
+				var len = data.length;
+				for(var i = 0; i < len; i++) {
+					var d = data[i];
+					
+					var h = "<li data-reportid='"+d.Id+"' data-htmlpage='"+d.HtmlPage+"' data-doctype='"+docType+"'><a>"+d.Name+"</a><span><img src='../images/delete18.png' class='removeDocNormal'><span></li>";
+					$(h).appendTo($("#"+name));
+				}
+			}
+				
+			function registerClick(name,openLayer){
+				$("#"+name+" li a").on('click', function(event){
+					 	
+					 	var id = $(event.target).parent().data("reportid");
+					 	var htmlpage = $(event.target).parent().data("htmlpage");
+					 	var name = event.target.innerHTML;
+					 	if(openLayer)
+					 		openLayerDialog(id,name);
+					 	else
+					 		postOpenDocumentMessage(id,name,htmlpage);
+				});
+
+					
+				$ ("#"+name+" li").hover(function(){
+			        	$(this).addClass('hover');
+			    
+				  		},function(){
+				       		$(this).removeClass('hover');
+			  	});
+			  	
+			  	$("#"+name+" li span .removeDocNormal").on('click', function(event){	
+			  		var he = $(event.target).parent().parent();
+				 	var id = he.data("reportid");
+				 	var docType = he.data("doctype");
+				 	deleteUserReport(id,docType,he);
+				 	
+				});
+			}
+				
+			function deleteUserReport(reportId,documentType,he){
+				$.ajax({
+					type: "get",
+					dataType: "json",
+					cache: false,
+					async: true,
+					url: getWebApiURI() + "/DeleteUserReport/?reportId="+reportId+"&token="+getUserToken()+"&documentType="+documentType,
+					success: function(data) {
+						he.remove();
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						alert(errorThrown);
+					}
+				});
+			}
+				
+			
+				
+			function createFavoriteMetro(data){
+				var len = data.length;
+				for( var i=1;i<len+1;i++){
+					$("#metro"+i).empty();
+					var r = data[i-1].HtmlPage;
+					
+					
+					var h = "<iframe src='"+r+"' data-reportid='"+r+"' style='width: 100%;height: 100%;' scrolling='no'  frameborder='no' border='0' marginwidth='0' ></iframe>";
+					$(h).appendTo($("#metro"+i));
+				}
+				
+				if(len<6){
+					var id = len+1;
+					$("#metro"+id).empty();
+					var h = "<img src='../images/add.png'>";
+					$(h).appendTo($("#metro"+id));
+					$("#metro"+id).addClass('addMetro');
+					
+					$(".addMetro").on('click', function(event){	
+							var newMetroLayer = layer.open({
+											  type: 2,
+											  shift:5,
+											  title:"选择指标",
+											  shade: [0.6, '#393D49'],
+											  shadeClose: true, //开启遮罩关闭
+											  area: ['520px', '520px'], //宽高
+											  content: "fileTreeDialog.htm?type=2",
+											  end: function(){ 
+											 	loadFavoriteMetroList();
+											  },
+											});
+							});
+				}
+			}
+				
+			$ ("#fReportList").hover(function(){
+	    			var h= "<span id='fReportAction' style='float:right;margin-right:5px;margin-top:0px'><img id='imgAddDoc' src='../images/add18.png' style='margin-right:10px'><img id='imgDeleteDoc' src='../images/config18.png' style='margin-right:10px'></span>";
+				     $(h).appendTo($(this));
+				     $("#imgAddDoc").on('click', function(event){	
+				     var newReportLayer = layer.open({
+											  type: 2,
+											  shift:5,
+											  title:"选择报表",
+											  shade: [0.6, '#393D49'],
+											  shadeClose: true, //开启遮罩关闭
+											  area: ['520px', '520px'], //宽高
+											  content: "fileTreeDialog.htm?type=0",
+											  end: function(){ 
+											  	loadFavoriteReportList();
+											  },
+											});
+				     	
+				     });
+				     $("#imgDeleteDoc").on('click', function(event){	
+				     	var he = $(event.target).parent().parent().parent();
+				     	he.find(".removeDocNormal").css("display","inline");
+				     	he.find(".imageOK").css("display","inline");
+				     });
+	    		}
+	    		,function(){	
+				        	$('#fReportAction').remove();
+			});
+			
+			function adhocQuery(){
+			
+				var m = new Array();
+				m[0] = "adhocQuery";
+				m[1] = $("#txtKeyword").val();
+				
+				window.parent.postMessage(m,'*');
+			}
+			
+			function openLayerDialog(id,name){
+				 id = id.replace(new RegExp("-","gm"),"_");  
+				 layer.open({
+											  type: 2,
+											  shift:5,
+											  title:name,
+											  shade: [0.6, '#393D49'],
+											  shadeClose: true, //开启遮罩关闭
+											  area: ['620px', '520px'], //宽高
+											  content: "../"+getCompanyCode()+"/"+id+"_1.htm",
+										});
+			}
+				
+			function registerEvent(){	
+				$ ("#fSimpleReportList").hover(function(){
+		    			var h= "<span id='fReportAction' style='float:right;margin-right:5px;margin-top:0px'><img id='imgAddDoc' src='../images/add18.png' style='margin-right:10px'><img id='imgDeleteDoc' src='../images/config18.png' style='margin-right:10px'></span>";
+					     $(h).appendTo($(this));
+					     $("#imgAddDoc").on('click', function(event){	
+					     var newReportLayer = layer.open({
+												  type: 2,
+												  shift:5,
+												  title:"选择报表",
+												  shade: [0.6, '#393D49'],
+												  shadeClose: true, //开启遮罩关闭
+												  area: ['520px', '520px'], //宽高
+												  content: "fileTreeDialog.htm?type=1",
+												  end: function(){ 
+												  	
+												  	loadFavoriteQueryList();
+												  },
+												});
+					     	
+					     });
+					     $("#imgDeleteDoc").on('click', function(event){	
+					     	
+					     	var he = $(event.target).parent().parent().parent();
+					     	
+					     	he.find(".removeDocNormal").css("display","inline");
+					     	he.find(".imageOK").css("display","inline");
+					     });
+		    		}
+		    		,function(){	
+					     $('#fReportAction').remove();
+				});
+						 
+						 
+				 $(".imageOK").on('click', function(event){	
+						var he = $(event.target).parent().parent();
+				     	
+				     	he.find(".removeDocNormal").css("display","none");
+				     	$(this).css("display","none");
+				});
+				
+				
+				 $(".removeMetro").on('click', function(event){	
+						var he = $(event.target).parent();
+						var iframe = he.find("iframe");
+						var id = iframe.data("reportid");
+						deleteUserReport(id,2,iframe);
+	
+				});
+					
+				$ ("#fMetroList").hover(function(){
+						 if( $(this).find(".imageMetroOK").css("display")!="none")
+						 	return;
+					
+		    			 $(this).find(".imageConfig").css("display","inline");
+
+					     $(".imageConfig").on('click', function(event){	
+					     	var he = $(event.target).parent().parent();
+					     	he.find(".removeMetro").css("display","inline");
+	
+					        $(this).css("display","none"); 
+					     	he.find(".imageMetroOK").css("display","inline");
+					     });
+					
+					     
+		    		}
+		    		,function(){	
+					   $(this).find(".imageConfig").css("display","none");
+				});
+					
+				 $(".imageMetroOK").on('click', function(event){	
+					var he = $(event.target).parent().parent();
+					 he.find(".removeMetro").css("display","none");
+					 $(this).css("display","none"); 
+	
+				});
+				
+				window.addEventListener('message',function(e){
+    			
+	    			var m = e.data;
+	    			
+	    			if( m[0]=="RefreshHistoryList")
+	    				loadHistoryReportList();
+	    				
+	         	},false);
+	         	
+	         	
+	         	 $("#homepageSearch").on('click',adhocQuery );
+			}
+		</script>
+	
+	</body>
+</html>
