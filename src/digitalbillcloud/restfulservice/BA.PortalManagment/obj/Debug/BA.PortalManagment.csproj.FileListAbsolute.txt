@@ -1,0 +1,10 @@
+E:\BA\DotNet\BA.PortalManagment\bin\Debug\BA.PortalManagment.dll
+E:\BA\DotNet\BA.PortalManagment\bin\Debug\BA.PortalManagment.pdb
+E:\BA\DotNet\BA.PortalManagment\obj\Debug\BA.PortalManagment.dll
+E:\BA\DotNet\BA.PortalManagment\obj\Debug\BA.PortalManagment.pdb
+E:\BA\DotNet\BIN\BA.PortalManagment.dll
+E:\BA\DotNet\BIN\BA.PortalManagment.pdb
+E:\Working\Blockchain\BIN\BA.PortalManagment.dll
+E:\Working\Blockchain\BIN\BA.PortalManagment.pdb
+E:\Working\Blockchain\BA.PortalManagment\obj\Debug\BA.PortalManagment.dll
+E:\Working\Blockchain\BA.PortalManagment\obj\Debug\BA.PortalManagment.pdb

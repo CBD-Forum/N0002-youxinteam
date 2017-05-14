@@ -1,0 +1,12 @@
+E:\BA\DotNet\BIN\BA.ReportService.Host.exe.config
+E:\BA\DotNet\BIN\BA.ReportService.Host.exe
+E:\BA\DotNet\BIN\BA.ReportService.Host.pdb
+E:\BA\DotNet\BA.ReportService.Host\obj\Debug\BA.ReportService.Host.exe
+E:\BA\DotNet\BA.ReportService.Host\obj\Debug\BA.ReportService.Host.pdb
+E:\BA\DotNet\BA.ReportService.Host\obj\Debug\BA.ReportService.Host.csprojResolveAssemblyReference.cache
+E:\Working\Blockchain\BIN\BA.ReportService.Host.exe.config
+E:\Working\Blockchain\BIN\BA.ReportService.Host.exe
+E:\Working\Blockchain\BIN\BA.ReportService.Host.pdb
+E:\Working\Blockchain\BA.ReportService.Host\obj\Debug\BA.ReportService.Host.exe
+E:\Working\Blockchain\BA.ReportService.Host\obj\Debug\BA.ReportService.Host.pdb
+E:\Working\Blockchain\BA.ReportService.Host\obj\Debug\BA.ReportService.Host.csprojResolveAssemblyReference.cache
