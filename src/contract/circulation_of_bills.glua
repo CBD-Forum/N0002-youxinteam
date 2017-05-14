@@ -1,0 +1,333 @@
+type Storage = {
+    -- insert new storage properties here
+    --票据签发者(票据发行方)
+    bill_issuer:string,
+    --票据承兑者
+    bill_acceptor:string,
+    --key:票据持有人公钥 value:持有金额,状态(0:担保人未对资金进行确认1:可以进行流转,2:提出承兑申请,3:承兑完成)
+    bill_holder_state:Map<string>,
+    --key:担保人公钥,value:是否进行确认(0:未进行确认,1:已经确认)
+    bill_backer:Map<int>,
+    --key:流转订单号 value:原持有人,金额,新持有人
+    bill_circulation:Map<string>,
+    --票据单号
+    bill_id:string,
+    --票据创建确认
+    bill_create_confirm:bool,
+    --票据是否还在使用
+    bill_useful:bool,
+    --票据开始承兑时间
+    bill_due_time:int,
+    contract_create:string
+}
+
+var M = Contract<Storage>()
+--[[
+函数名称: init
+输入参数:
+    无
+触发事件:
+    无
+函数功能: 合约创建时用于初始化合约内的变量
+版本: 1.0
+注意事项:
+]]--
+function M:init()
+    print("初始化")
+    -- insert init code of contract here
+    self.storage.bill_issuer = ""
+    self.storage.bill_acceptor = ""
+    self.storage.bill_holder_state = {}
+    self.storage.bill_backer = {}
+    self.storage.bill_circulation = {}
+    self.storage.bill_id = ""
+    self.storage.bill_create_confirm = false
+    self.storage.bill_useful = true
+    self.storage.bill_due_time = 0
+    self.storage.contract_create = caller
+end
+function M:reinit(arg:string)
+    self.storage.bill_issuer = ""
+    self.storage.bill_acceptor = ""
+    self.storage.bill_holder_state = {}
+    self.storage.bill_backer = {}
+    self.storage.bill_circulation = {}
+    self.storage.bill_id = ""
+    self.storage.bill_create_confirm = false
+    self.storage.bill_useful = true
+    self.storage.bill_due_time = 0
+end
+function M:stroaa(arg:string)
+    print(self.storage.bill_issuer)
+    print(self.storage.bill_acceptor)
+    print(self.storage.bill_holder_state)
+    print(self.storage.bill_backer)
+    print(self.storage.bill_circulation)
+    print(self.storage.bill_id)
+    print(self.storage.bill_create_confirm)
+    print(self.storage.bill_useful)
+    print(self.storage.bill_due_time)
+end
+--[[
+函数名称: bill_create
+输入参数:
+    arg(输入参数长度不能超过1024个字符)
+    票据单号|票据签发者公钥|票据账期(标准时?)|票据初始持有人公钥|票据金额|票据承兑者公钥|担保人1公钥,担保人2公钥,担保人3公钥
+    
+触发事件:
+    无
+函数功能: 初始化票据
+版本: 1.0
+注意事项:
+    1.如果该票据已经被初始化，不能再一次初始化
+    2.如果初始化参数不足，不能进行票据的创建
+]]--
+function M:bill_create(arg:string)
+    if self.storage.bill_id ~= "" then
+        error("bill_create fail:bill has been create")
+        return
+    end
+    local args = string.split(arg,'|')
+    if rawlen(args) ~= 7 then
+        error("bill_create fail:bill input args num is",rawlen(args))
+        return
+    end
+    self.storage.bill_id = tostring(args[1])
+    self.storage.bill_issuer = tostring(args[2])
+    self.storage.bill_due_time = tointeger(args[3])
+    local bill_holder = tostring(args[4])
+    self.storage.bill_holder_state[bill_holder] = tostring(args[5])..','..'0'
+    self.storage.bill_acceptor = tostring(args[6])
+    local bill_backers = string.split(tostring(args[7]),',')
+    local key = 0
+    local bill_backer = ""
+    for key,bill_backer in pairs(bill_backers) do
+        self.storage.bill_backer[bill_backer] = 0
+        pprint(bill_backer,self.storage.bill_backer[bill_backer])
+    end
+end
+--[[
+函数名称: bill_create_confirm
+输入参数:
+    无
+触发事件:
+    无
+函数功能: 担保人确认票据发行
+版本: 1.0
+注意事项:
+    1.需要担保人进行合约调用
+    2.如果所有担保人都已经进行过确认，那么票据可以进行流转
+]]--
+function M:bill_create_confirm(arg:string)
+    if self.storage.bill_backer[caller] == nil or self.storage.bill_create_confirm == true then
+        error("bill_create_confirm fail: caller[" .. caller .. "] bill_create_confirm [" .. tostring(self.storage.bill_create_confirm) .."]")
+        return
+    else
+        self.storage.bill_backer[caller] = 1
+        local banker = ""
+        local state = 0
+        local been_check = 0
+        for banker,state in pairs(self.storage.bill_backer) do
+            if state == 0 then
+                been_check = been_check + 1
+            end
+        end
+        print("bill_create_confirm been_check",been_check)
+        if been_check == 0 then
+            self.storage.bill_create_confirm = true
+            local holder = ""
+            local balance_state = ""
+            for holder,balance_state in pairs(self.storage.bill_holder_state) do
+                local temp_balance_state = string.split(balance_state,',')
+                self.storage.bill_holder_state[holder] = tostring(temp_balance_state[1])..','..'1'
+                pprint(holder,self.storage.bill_holder_state[holder])
+            end
+        end
+    end
+end
+--[[
+函数名称: bill_circulation_transfer
+输入参数:
+    arg:
+        流转的票据单号|流转的金额|流转到账户
+触发事件:
+    无
+函数功能: 票据拥有者进行票据流转
+版本: 1.0
+注意事项:
+    1.同时流转的票据的票据单号不能一致
+]]--
+function M:bill_circulation_transfer(arg:string)
+    local args = string.split(arg,'|')
+    local bill_circulation_id = tostring(args[1])
+    local bill_circulation_amount = tointeger(args[2])
+    local new_holder = tostring(args[3])
+    local old_holder = caller
+    if self.storage.bill_holder_state[old_holder] == nil or self.storage.bill_circulation[bill_circulation_id]  ~= nil then
+        error("bill_circulation_transfer fail:has transfer or not a bill holder")
+        return
+    end
+    local holder_info = self.storage.bill_holder_state[old_holder]
+    local holder_balance_state = string.split(holder_info,',')
+    local old_holder_original_amount = tointeger(holder_balance_state[1])
+    local old_holder_state = tointeger(holder_balance_state[2])
+    if old_holder_state ~= 1 or old_holder_original_amount < bill_circulation_amount then
+        error("bill_circulation_transfer fail:in wrong state or doesnt have enough amount to circulation",old_holder_original_amount)
+        return
+    end
+    local old_holder_amount_left = old_holder_original_amount - bill_circulation_amount
+    if old_holder_amount_left == 0 then
+        self.storage.bill_holder_state[old_holder] = nil
+    else 
+        self.storage.bill_holder_state[old_holder] = tostring(old_holder_amount_left)..','..tostring(old_holder_state)
+    end
+    self.storage.bill_circulation[bill_circulation_id] = old_holder..','..tostring(bill_circulation_amount)..','..new_holder
+    pprint(bill_circulation_id,self.storage.bill_circulation[bill_circulation_id])
+end
+--[[
+函数名称: bill_circulation_confirm
+输入参数:
+    arg:
+        流转的票据单号
+触发事件:
+    无
+函数功能: 确认流转
+版本: 1.0
+注意事项:
+    暂无
+]]--
+function M:bill_circulation_confirm(arg:string)
+    local bill_circulation_id = arg
+    local bill_circulation_holder = caller
+    if self.storage.bill_circulation[bill_circulation_id] ~= nil then
+        local bill_circulation_infos = self.storage.bill_circulation[bill_circulation_id]
+        local bill_circulation_info = string.split(bill_circulation_infos,',')
+        if tostring(bill_circulation_info[3]) ~= bill_circulation_holder then
+            error("bill_circulation_confirm fail: not the confirm person")
+            return
+        end
+        self.storage.bill_circulation[bill_circulation_id] = nil
+        if self.storage.bill_holder_state[bill_circulation_holder] == nil then
+            self.storage.bill_holder_state[bill_circulation_holder] = tostring(bill_circulation_info[2])..','.."1"
+        else 
+            local holder_info = self.storage.bill_holder_state[bill_circulation_holder]
+            local holder_balance_state = string.split(holder_info,',')
+            local holder_amount = tointeger(holder_balance_state[1]) + tointeger(bill_circulation_info[2])
+            self.storage.bill_holder_state[bill_circulation_holder] = tostring(holder_amount)..','..tostring(holder_balance_state[2])
+        end
+        pprint(bill_circulation_holder , self.storage.bill_holder_state[bill_circulation_holder])
+    else
+        error("bill_circulation_confirm fail: doesnt has the trx id")
+    end
+end
+--[[
+函数名称: bill_circulation_cancel
+输入参数:
+    arg:
+        取消流转的票据单号
+触发事件:
+    无
+函数功能: 取消流转
+版本: 1.0
+注意事项:
+    暂无
+]]--
+function M:bill_circulation_cancel(arg:string)
+    local bill_circulation_id = arg
+    local bill_circulation_holder = caller
+    if self.storage.bill_circulation[bill_circulation_id] ~= nil then
+        local bill_circulation_infos = self.storage.bill_circulation[bill_circulation_id]
+        local bill_circulation_info = string.split(bill_circulation_infos,',')
+        if tostring(bill_circulation_info[1]) ~= bill_circulation_holder then
+            error("bill_circulation_cancel:not the cancel person")
+            return
+        end
+        self.storage.bill_circulation[bill_circulation_id] = nil
+        if self.storage.bill_holder_state[bill_circulation_holder] == nil then
+            self.storage.bill_holder_state[bill_circulation_holder] = tostring(bill_circulation_info[2])..','..'1'
+        else 
+            local holder_info = self.storage.bill_holder_state[bill_circulation_holder]
+            local holder_balance_state = string.split(holder_info,',')
+            local holder_amount = tointeger(holder_balance_state[1]) + tointeger(bill_circulation_info[2])
+            self.storage.bill_holder_state[bill_circulation_holder] = tostring(holder_amount)..','..tostring(holder_balance_state[2])
+        end
+        pprint(bill_circulation_holder , self.storage.bill_holder_state[bill_circulation_holder])
+    else
+        error("bill_circulation_cancel fail: doesnt has the trx id")
+    end
+end
+--[[
+函数名称: initiate_acceptance
+输入参数:
+触发事件:
+    无
+函数功能: 申请承兑
+版本: 1.0
+注意事项:
+    TODO:如果当前申请承兑账户有票据正在进行流转，是否允许其进行承兑
+]]--
+function M:initiate_acceptance(arg:string)
+    local holder = caller
+    local circulation_id = ""
+    local circulation_infos = ""
+    local circulation_num = 0
+    for circulation_id,circulation_infos in pairs(self.storage.bill_circulation) do
+        local circulation_info = string.split(circulation_infos,',')
+        if circulation_info[1] == caller then
+            circulation_num = circulation_num + 1
+        end
+    end
+    if circulation_num ~= 0 then
+        error("initiate_acceptance fail:caller has bill circulation not confirm")
+    end
+    if self.storage.bill_holder_state[holder] ~= nil then
+        local holder_info = self.storage.bill_holder_state[holder]
+        local holder_balance_state = string.split(holder_info,',')
+        self.storage.bill_holder_state[holder] = tostring(holder_balance_state[1])..','..'2'
+        print("initiate_acceptance",holder,self.storage.bill_holder_state[holder])
+    else
+        error("initiate_acceptance fail:dont have amount to initiate acceptance")
+    end
+end
+--[[
+函数名称: acceptance
+输入参数:
+触发事件:
+    无
+函数功能: 进行承兑
+版本: 1.0
+注意事项:
+    
+]]--
+function M:acceptance(arg:string)
+    if get_chain_now() < self.storage.bill_due_time then 
+        error("acceptance fail:hasnt achive bill due time")
+        return 
+    end
+    if caller ~= self.storage.bill_acceptor then
+        error("acceptance fail:not the bill_acceptor call")
+        return 
+    end
+    local holder = ""
+    local balance_state = ""
+    local all_acceptance:bool = true
+    local state = 0
+    for holder, balance_state in pairs(self.storage.bill_holder_state) do
+        local holder_info = string.split(tostring(balance_state),',')
+        state = tointeger(holder_info[2])
+        if state ~= 2 then
+            all_acceptance = false
+        end
+    end
+    if  all_acceptance == true then
+        for holder, balance_state in pairs(self.storage.bill_holder_state) do
+            local holder_infos = string.split(balance_state,',')
+            self.storage.bill_holder_state[holder] = tostring(holder_infos[1])..','..'3'
+            print("initiate_acceptance",holder,self.storage.bill_holder_state[holder])
+        end
+        self.storage.bill_useful = false
+    else
+        error("acceptance fail:not all user initiateacceptance")
+    end
+end
+return M
